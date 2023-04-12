@@ -28,7 +28,6 @@ sourceSets {
     main {
         resources {
             srcDirs = [
-                    "EOS/SDK/Bin",
                     "libs/macosx64",
                     "libs/macosxarm64",
                     "libs/windows64",
@@ -39,6 +38,7 @@ sourceSets {
 }
 
 tasks.named('test') {
+    sourceSets.main.resources.srcDirs += "EOS/SDK/Bin"
     useJUnitPlatform()
 }
 
