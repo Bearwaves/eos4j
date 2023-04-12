@@ -1,0 +1,70 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath "com.badlogicgames.gdx:gdx-jnigen-gradle:2.3.1"
+    }
+}
+
+plugins {
+    id 'java-library'
+}
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation "com.badlogicgames.gdx:gdx-backend-lwjgl3:1.11.0"
+
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.9.1'
+}
+
+sourceSets {
+    main {
+        resources {
+            srcDirs = [
+                    "EOS/SDK/Bin",
+                    "libs/macosx64",
+                    "libs/macosxarm64",
+                    "libs/windows64",
+                    "libs/linux64",
+            ]
+        }
+    }
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
+
+apply plugin: "com.badlogicgames.gdx.gdx-jnigen"
+jnigen {
+    sharedLibName = "eos4j"
+
+    nativeCodeGenerator {
+        sourceDir = "src/main"
+    }
+
+    all {
+        headerDirs = ["EOS/SDK/Include"]
+        cppFlags += " -std=c++17 "
+    }
+
+    add(Windows, x64) {
+        libraries += "-L" + file("./EOS/SDK/Lib").absolutePath + " -lEOSSDK-Win64-Shipping"
+    }
+    add(MacOsX, x64) {
+        libraries += "-L" + file("./EOS/SDK/Bin").absolutePath + " -lEOSSDK-Mac-Shipping"
+    }
+    add(MacOsX, x64, ARM) {
+        libraries += "-L" + file("./EOS/SDK/Bin").absolutePath + " -lEOSSDK-Mac-Shipping"
+    }
+    add(Linux, x64) {
+        libraries += "-L" + file("./EOS/SDK/Bin").absolutePath + " -lEOSSDK-Linux-Shipping"
+    }
+}
