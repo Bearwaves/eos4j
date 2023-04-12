@@ -47,11 +47,11 @@ jnigen {
     sharedLibName = "eos4j"
 
     nativeCodeGenerator {
-        sourceDir = "src/main"
+        sourceDir = "src/main/java"
     }
 
     all {
-        headerDirs = ["EOS/SDK/Include"]
+        headerDirs = ["../EOS/SDK/Include"]
         cppFlags += " -std=c++17 "
     }
 
