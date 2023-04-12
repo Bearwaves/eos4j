@@ -41,6 +41,13 @@ public class EOS {
         }
     }
 
+    public static void shutdown() throws EOSException {
+        int result = shutdownNative();
+        if (result != 0) {
+            throw new EOSException(result);
+        }
+    }
+
     public static class InitializeOptions {
         public final String productName;
         public final String productVersion;
@@ -78,6 +85,10 @@ public class EOS {
         env->ReleaseStringUTFChars(product_version_object, product_version);
 
         return result;
+    */
+
+    private static native int shutdownNative(); /*
+        return static_cast<int>(EOS_Shutdown());
     */
 
 }

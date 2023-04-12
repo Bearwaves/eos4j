@@ -12,11 +12,12 @@ class EOSTest {
     }
 
     @Test
-    void initializesCorrectly() throws EOSException {
+    void initializesAndShutsDownCorrectly() throws EOSException {
         Exception exception = assertThrows(EOSException.class, () -> {
             EOS.initialize(new EOS.InitializeOptions("", "1.0.0"));
         });
         assertEquals("EOS Error code: EOS_InvalidParameters", exception.getMessage());
         EOS.initialize(new EOS.InitializeOptions("product name", "1.0.0"));
+        EOS.shutdown();
     }
 }
