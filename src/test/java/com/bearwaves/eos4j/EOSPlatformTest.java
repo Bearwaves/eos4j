@@ -29,7 +29,6 @@ public class EOSPlatformTest {
         });
         assertEquals("Failed to create platform handle", exception.getMessage());
 
-
         EOSPlatform platform = new EOSPlatform(new EOSPlatform.Options(
                 System.getenv("EOS4J_TEST_PRODUCT_ID"),
                 System.getenv("EOS4J_TEST_SANDBOX_ID"),

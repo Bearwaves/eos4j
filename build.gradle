@@ -41,7 +41,10 @@ tasks.named('test') {
     sourceSets.main.resources.srcDirs += "jni/EOS/SDK/Bin"
 
     def localProperties = new Properties()
-    localProperties.load(new FileInputStream(rootProject.file("local.properties")))
+    def propertiesFile = rootProject.file("local.properties")
+    if (propertiesFile.exists()) {
+        localProperties.load(propertiesFile.newDataInputStream())
+    }
     environment "EOS4J_TEST_PRODUCT_ID", localProperties.getProperty("EOS4J_TEST_PRODUCT_ID") ?: System.getenv("EOS4J_TEST_PRODUCT_ID")
     environment "EOS4J_TEST_SANDBOX_ID", localProperties.getProperty("EOS4J_TEST_SANDBOX_ID") ?: System.getenv("EOS4J_TEST_SANDBOX_ID")
     environment "EOS4J_TEST_DEPLOYMENT_ID", localProperties.getProperty("EOS4J_TEST_DEPLOYMENT_ID") ?: System.getenv("EOS4J_TEST_DEPLOYMENT_ID")
