@@ -38,7 +38,7 @@ sourceSets {
 }
 
 tasks.named('test') {
-    sourceSets.main.resources.srcDirs += "EOS/SDK/Bin"
+    sourceSets.main.resources.srcDirs += "jni/EOS/SDK/Bin"
     useJUnitPlatform()
 }
 
@@ -51,20 +51,21 @@ jnigen {
     }
 
     all {
-        headerDirs = ["../EOS/SDK/Include"]
+        headerDirs = ["EOS/SDK/Include", "cpp"]
         cppFlags += " -std=c++17 "
+        cppIncludes += "cpp/*.cpp"
     }
 
     add(Windows, x64) {
-        libraries += "-L" + file("./EOS/SDK/Lib").absolutePath + " -lEOSSDK-Win64-Shipping"
+        libraries += "-L" + file("./jni/EOS/SDK/Lib").absolutePath + " -lEOSSDK-Win64-Shipping"
     }
     add(MacOsX, x64) {
-        libraries += "-L" + file("./EOS/SDK/Bin").absolutePath + " -lEOSSDK-Mac-Shipping"
+        libraries += "-L" + file("./jni/EOS/SDK/Bin").absolutePath + " -lEOSSDK-Mac-Shipping"
     }
     add(MacOsX, x64, ARM) {
-        libraries += "-L" + file("./EOS/SDK/Bin").absolutePath + " -lEOSSDK-Mac-Shipping"
+        libraries += "-L" + file("./jni/EOS/SDK/Bin").absolutePath + " -lEOSSDK-Mac-Shipping"
     }
     add(Linux, x64) {
-        libraries += "-L" + file("./EOS/SDK/Bin").absolutePath + " -lEOSSDK-Linux-Shipping"
+        libraries += "-L" + file("./jni/EOS/SDK/Bin").absolutePath + " -lEOSSDK-Linux-Shipping"
     }
 }

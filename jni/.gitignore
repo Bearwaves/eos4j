@@ -1,0 +1,6 @@
+target
+EOS
+jni-headers
+*.xml
+com_bearwaves_eos4j_*
+memcpy_wrap.c

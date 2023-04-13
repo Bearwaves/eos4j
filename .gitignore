@@ -16,9 +16,7 @@ gradle-app.setting
 # Ignore Gradle build output directory
 build
 bin
-EOS/
 libs/
-jni/
 
 .vim/
 .idea/

@@ -61,6 +61,7 @@ public class EOS {
     /*JNI
     #include <eos_sdk.h>
     #include <cstring>
+    #include "jni_utils.h"
     */
 
     private static native int initializeNative(InitializeOptions options); /*
@@ -68,21 +69,18 @@ public class EOS {
 
         jfieldID product_name_id = env->GetFieldID(cls, "productName", "Ljava/lang/String;");
         jstring product_name_object = (jstring) env->GetObjectField(options, product_name_id);
-        const char* product_name = env->GetStringUTFChars(product_name_object, nullptr);
+        auto product_name = EOS4J::JavaString(env, std::move(product_name_object));
 
         jfieldID product_version_id = env->GetFieldID(cls, "productVersion", "Ljava/lang/String;");
         jstring product_version_object = (jstring) env->GetObjectField(options, product_version_id);
-        const char* product_version = env->GetStringUTFChars(product_version_object, nullptr);
+        auto product_version = EOS4J::JavaString(env, std::move(product_version_object));
 
         EOS_InitializeOptions sdk_options;
         memset(&sdk_options, 0, sizeof(sdk_options));
         sdk_options.ApiVersion = EOS_INITIALIZE_API_LATEST;
-        sdk_options.ProductName = product_name;
-        sdk_options.ProductVersion = product_version;
+        sdk_options.ProductName = product_name.c_str();
+        sdk_options.ProductVersion = product_version.c_str();
         auto result = static_cast<int>(EOS_Initialize(&sdk_options));
-
-        env->ReleaseStringUTFChars(product_name_object, product_name);
-        env->ReleaseStringUTFChars(product_version_object, product_version);
 
         return result;
     */
