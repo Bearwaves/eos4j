@@ -39,6 +39,15 @@ sourceSets {
 
 tasks.named('test') {
     sourceSets.main.resources.srcDirs += "jni/EOS/SDK/Bin"
+
+    def localProperties = new Properties()
+    localProperties.load(new FileInputStream(rootProject.file("local.properties")))
+    environment "EOS4J_TEST_PRODUCT_ID", localProperties.getProperty("EOS4J_TEST_PRODUCT_ID") ?: System.getenv("EOS4J_TEST_PRODUCT_ID")
+    environment "EOS4J_TEST_SANDBOX_ID", localProperties.getProperty("EOS4J_TEST_SANDBOX_ID") ?: System.getenv("EOS4J_TEST_SANDBOX_ID")
+    environment "EOS4J_TEST_DEPLOYMENT_ID", localProperties.getProperty("EOS4J_TEST_DEPLOYMENT_ID") ?: System.getenv("EOS4J_TEST_DEPLOYMENT_ID")
+    environment "EOS4J_TEST_CLIENT_ID", localProperties.getProperty("EOS4J_TEST_CLIENT_ID") ?: System.getenv("EOS4J_TEST_CLIENT_ID")
+    environment "EOS4J_TEST_CLIENT_SECRET", localProperties.getProperty("EOS4J_TEST_CLIENT_SECRET") ?: System.getenv("EOS4J_TEST_CLIENT_SECRET")
+
     useJUnitPlatform()
 }
 

@@ -22,3 +22,4 @@ libs/
 .idea/
 .settings/
 .DS_Store
+local.properties

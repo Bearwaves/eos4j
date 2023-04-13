@@ -27,5 +27,11 @@ jobs:
         run: |
           ./gradlew jnigenBuild
       - name: Run tests
+        env:
+          EOS4J_TEST_PRODUCT_ID: "${{ secrets.EOS_PRODUCT_ID }}"
+          EOS4J_TEST_SANDBOX_ID: "${{ secrets.EOS_SANDBOX_ID }}"
+          EOS4J_TEST_DEPLOYMENT_ID: "${{ secrets.EOS_DEPLOYMENT_ID }}"
+          EOS4J_TEST_CLIENT_ID: "${{ secrets.EOS_CLIENT_ID }}"
+          EOS4J_TEST_CLIENT_SECRET: "${{ secrets.EOS_CLIENT_SECRET }}"
         run: |
           ./gradlew test
