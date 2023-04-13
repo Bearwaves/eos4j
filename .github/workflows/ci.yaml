@@ -18,10 +18,10 @@ jobs:
           cache: gradle
       - name: Fetch EOS SDK
         run: |
-          mkdir EOS
+          mkdir -p jni/EOS
           curl -L 'https://dev.epicgames.com/api/sdk/download?archive_id=496&archive_type=sdk' \
             -o sdk.zip
-          unzip sdk.zip -d EOS
+          unzip sdk.zip -d jni/EOS
           rm sdk.zip
       - name: Build natives
         run: |

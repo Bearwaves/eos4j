@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class EOSPlatformTest {
+public class EOSTest {
     @BeforeAll
     static void beforeAll() throws EOSException {
         assertTrue(EOS.loadLibraries());
