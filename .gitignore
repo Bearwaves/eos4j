@@ -23,3 +23,5 @@ libs/
 .settings/
 .DS_Store
 local.properties
+.classpath
+.project

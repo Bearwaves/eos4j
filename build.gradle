@@ -65,7 +65,7 @@ jnigen {
     all {
         headerDirs = ["EOS/SDK/Include", "cpp"]
         cppFlags += " -std=c++17 "
-        cppIncludes += "cpp/*.cpp"
+        cppExcludes += "EOS/**"
     }
 
     add(Windows, x64) {
