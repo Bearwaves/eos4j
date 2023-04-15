@@ -15,6 +15,18 @@ public class EOSPlatform {
         EOSPlatformNative.release(handle);
     }
 
+    public void tick() {
+        EOSPlatformNative.tick(handle);
+    }
+
+    public EOSAuth getAuthHandle() throws EOSException {
+        long authHandle = EOSPlatformNative.getAuthHandle(handle);
+        if (authHandle == 0) {
+            throw new EOSException("Failed to get auth handle");
+        }
+        return new EOSAuth(authHandle);
+    }
+
     public static class Options {
         public final String productId;
         public final String sandboxId;

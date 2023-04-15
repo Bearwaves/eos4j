@@ -29,4 +29,12 @@ class EOSPlatformNative {
     static native void release(long handle); /*
         EOS_Platform_Release(reinterpret_cast<EOS_HPlatform>(handle));
     */
+
+    static native void tick(long handle); /*
+        EOS_Platform_Tick(reinterpret_cast<EOS_HPlatform>(handle));
+    */
+
+    static native long getAuthHandle(long handle); /*
+        return (long long) EOS_Platform_GetAuthInterface(reinterpret_cast<EOS_HPlatform>(handle));
+    */
 }

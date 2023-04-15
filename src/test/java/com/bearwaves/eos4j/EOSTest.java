@@ -36,6 +36,30 @@ public class EOSTest {
                 System.getenv("EOS4J_TEST_CLIENT_ID"),
                 System.getenv("EOS4J_TEST_CLIENT_SECRET")
         ));
+
+        EOSAuth auth = platform.getAuthHandle();
+        auth.login(
+                new EOSAuth.LoginOptions(new EOSAuth.Credentials(
+                        EOSAuth.CredentialsType.DEVELOPER, "localhost:1245", "feud"
+                ), 0x1),
+                new EOSAuth.LoginCallback() {
+                    @Override
+                    void run(EOSAuth.LoginCallbackInfo data) {
+                        System.out.println("Data: " + data);
+                    }
+                });
+
+        platform.tick();
+        try {
+            Thread.sleep(1000);
+            platform.tick();
+            Thread.sleep(1000);
+            platform.tick();
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        platform.tick();
         platform.release();
     }
 }
