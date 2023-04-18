@@ -37,6 +37,9 @@ public class EOSTest {
                 System.getenv("EOS4J_TEST_CLIENT_SECRET")
         ));
 
+        EOSLogging.setLogLevel(EOSLogging.LogCategory.ALL_CATEGORIES, EOSLogging.LogLevel.VERY_VERBOSE);
+        EOSLogging.setCallback(message -> System.out.println(message.category + ": " + message.message));
+
         platform.getAuthHandle();
         platform.release();
     }

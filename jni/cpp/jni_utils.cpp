@@ -33,9 +33,7 @@ jint EOS4J::javaEnumValueFromObjectField(
 	jclass cls = env->GetObjectClass(obj);
 	jfieldID fid = env->GetFieldID(cls, field, sig);
 	jobject enum_obj = env->GetObjectField(obj, fid);
-	jclass enum_cls = env->GetObjectClass(enum_obj);
-	jmethodID ord = env->GetMethodID(enum_cls, "ordinal", "()I");
-	return env->CallIntMethod(enum_obj, ord);
+	return EOS4J::javaEnumValueFromObject(env, enum_obj);
 }
 
 jint EOS4J::javaIntFromObjectField(
@@ -43,4 +41,10 @@ jint EOS4J::javaIntFromObjectField(
 	jclass cls = env->GetObjectClass(obj);
 	jfieldID fid = env->GetFieldID(cls, field, "I");
 	return env->GetIntField(obj, fid);
+}
+
+jint EOS4J::javaEnumValueFromObject(JNIEnv* env, jobject obj) {
+	jclass enum_cls = env->GetObjectClass(obj);
+	jmethodID ord = env->GetMethodID(enum_cls, "ordinal", "()I");
+	return env->CallIntMethod(obj, ord);
 }

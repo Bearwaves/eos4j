@@ -42,4 +42,6 @@ jint javaEnumValueFromObjectField(
 
 jint javaIntFromObjectField(JNIEnv* env, jobject obj, const char* field);
 
+jint javaEnumValueFromObject(JNIEnv* env, jobject obj);
+
 } // namespace EOS4J
