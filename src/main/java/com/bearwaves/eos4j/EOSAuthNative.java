@@ -4,6 +4,7 @@ package com.bearwaves.eos4j;
 #include <eos_auth.h>
 #include <cstring>
 #include "jni_utils.h"
+#include "callback_adapter.h"
 */
 
 class EOSAuthNative {
@@ -26,24 +27,24 @@ class EOSAuthNative {
         login_options.ScopeFlags = static_cast<EOS_EAuthScopeFlags>(scope_flags);
         login_options.Credentials = &credentials;
 
-        auto client_data = new EOS4J::JavaCallback(env, callback);
-        EOS_Auth_Login(reinterpret_cast<EOS_HAuth>(handle), &login_options, client_data, [](const EOS_Auth_LoginCallbackInfo* data) -> void {
-            EOS4J::JavaCallback* callback_data = reinterpret_cast<EOS4J::JavaCallback*>(data->ClientData);
-            JNIEnv* env = callback_data->env;
-            jobject callback = callback_data->callback;
-            jclass cls = env->GetObjectClass(callback);
+        auto callback_adapter = new EOS4J::CallbackAdapter(env, callback);
+        EOS_Auth_Login(reinterpret_cast<EOS_HAuth>(handle), &login_options, callback_adapter, [](const EOS_Auth_LoginCallbackInfo* data) -> void {
+            EOS4J::CallbackAdapter* callback_adapter = reinterpret_cast<EOS4J::CallbackAdapter*>(data->ClientData);
+            callback_adapter->attach([&](JNIEnv* env, jobject callback) -> void {
+                jclass cls = env->GetObjectClass(callback);
+                jclass ptr_class = env->FindClass("com/bearwaves/eos4j/EOSHandle");
 
-            auto ptr_class = env->FindClass("com/bearwaves/eos4j/EOSHandle");
-            jmethodID ptr_ctor = env->GetMethodID(ptr_class, "<init>", "(J)V");
-            auto callback_info_class = env->FindClass("com/bearwaves/eos4j/EOSAuth$LoginCallbackInfo");
-            jmethodID callback_info_ctor = env->GetMethodID(callback_info_class, "<init>", "(Lcom/bearwaves/eos4j/EOSHandle;Lcom/bearwaves/eos4j/EOSHandle)V");
-            auto local_user_id = env->NewObject(ptr_class, ptr_ctor, data->LocalUserId);
-            auto selected_account_id = env->NewObject(ptr_class, ptr_ctor, data->SelectedAccountId);
-            auto callback_info = env->NewObject(callback_info_class, callback_info_ctor, local_user_id, selected_account_id);
+                jmethodID ptr_ctor = env->GetMethodID(ptr_class, "<init>", "(J)V");
+                auto callback_info_class = env->FindClass("com/bearwaves/eos4j/EOSAuth$LoginCallbackInfo");
+                jmethodID callback_info_ctor = env->GetMethodID(callback_info_class, "<init>", "(Lcom/bearwaves/eos4j/EOSHandle;Lcom/bearwaves/eos4j/EOSHandle;)V");
+                auto local_user_id = env->NewObject(ptr_class, ptr_ctor, data->LocalUserId);
+                auto selected_account_id = env->NewObject(ptr_class, ptr_ctor, data->SelectedAccountId);
+                auto callback_info = env->NewObject(callback_info_class, callback_info_ctor, local_user_id, selected_account_id);
 
-            jmethodID mid = env->GetMethodID(cls, "run", "(Lcom/bearwaves/eos4j/EOSAuth$LoginCallbackInfo)V");
-            env->CallVoidMethod(callback, mid, callback_info);
-            delete callback_data;
+                jmethodID mid = env->GetMethodID(cls, "run", "(Lcom/bearwaves/eos4j/EOSAuth$LoginCallbackInfo;)V");
+                env->CallVoidMethod(callback, mid, callback_info);
+            });
+            delete callback_adapter;
         });
     */
 }

@@ -48,8 +48,8 @@ public class EOSAuth {
         }
     }
 
-    public static abstract class LoginCallback {
-        abstract void run(LoginCallbackInfo data);
+    public interface LoginCallback {
+        void run(LoginCallbackInfo data);
     }
 
 }
