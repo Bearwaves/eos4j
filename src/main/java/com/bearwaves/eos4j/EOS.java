@@ -35,16 +35,16 @@ public class EOS {
     }
 
     public static void initialize(InitializeOptions options) throws EOSException {
-        int result = initializeNative(options);
-        if (result != 0) {
-            throw new EOSException(result);
-        }
+        throwIfErrorCode(initializeNative(options));
     }
 
     public static void shutdown() throws EOSException {
-        int result = shutdownNative();
-        if (result != 0) {
-            throw new EOSException(result);
+        throwIfErrorCode(shutdownNative());
+    }
+
+    public static void throwIfErrorCode(int resultCode) throws EOSException {
+        if (resultCode != 0) {
+            throw new EOSException(resultCode);
         }
     }
 

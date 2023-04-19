@@ -39,10 +39,12 @@ public class EOSAuth {
     }
 
     public static class LoginCallbackInfo {
+        public final int resultCode;
         public final EOSHandle localUserId;
         public final EOSHandle selectedAccountId;
 
-        LoginCallbackInfo(EOSHandle localUserId, EOSHandle selectedAccountId) {
+        LoginCallbackInfo(int resultCode, EOSHandle localUserId, EOSHandle selectedAccountId) {
+            this.resultCode = resultCode;
             this.localUserId = localUserId;
             this.selectedAccountId = selectedAccountId;
         }

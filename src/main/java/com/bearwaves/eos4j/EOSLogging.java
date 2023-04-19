@@ -5,18 +5,12 @@ public class EOSLogging {
     static LoggingCallback loggingCallback;
 
     public static void setLogLevel(LogCategory category, LogLevel level) throws EOSException {
-        int result = EOSLoggingNative.setLogLevel(category, level);
-        if (result != 0) {
-            throw new EOSException(result);
-        }
+        EOS.throwIfErrorCode(EOSLoggingNative.setLogLevel(category, level));
     }
 
     public static void setCallback(LoggingCallback callback) throws EOSException {
         loggingCallback = callback;
-        int result = EOSLoggingNative.setCallback(loggingCallback);
-        if (result != 0) {
-            throw new EOSException(result);
-        }
+        EOS.throwIfErrorCode(EOSLoggingNative.setCallback(loggingCallback));
     }
 
     public enum LogLevel {

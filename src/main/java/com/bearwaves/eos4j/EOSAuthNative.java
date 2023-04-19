@@ -36,10 +36,10 @@ class EOSAuthNative {
 
                 jmethodID ptr_ctor = env->GetMethodID(ptr_class, "<init>", "(J)V");
                 auto callback_info_class = env->FindClass("com/bearwaves/eos4j/EOSAuth$LoginCallbackInfo");
-                jmethodID callback_info_ctor = env->GetMethodID(callback_info_class, "<init>", "(Lcom/bearwaves/eos4j/EOSHandle;Lcom/bearwaves/eos4j/EOSHandle;)V");
+                jmethodID callback_info_ctor = env->GetMethodID(callback_info_class, "<init>", "(ILcom/bearwaves/eos4j/EOSHandle;Lcom/bearwaves/eos4j/EOSHandle;)V");
                 auto local_user_id = env->NewObject(ptr_class, ptr_ctor, data->LocalUserId);
                 auto selected_account_id = env->NewObject(ptr_class, ptr_ctor, data->SelectedAccountId);
-                auto callback_info = env->NewObject(callback_info_class, callback_info_ctor, local_user_id, selected_account_id);
+                auto callback_info = env->NewObject(callback_info_class, callback_info_ctor, static_cast<int>(data->ResultCode), local_user_id, selected_account_id);
 
                 jmethodID mid = env->GetMethodID(cls, "run", "(Lcom/bearwaves/eos4j/EOSAuth$LoginCallbackInfo;)V");
                 env->CallVoidMethod(callback, mid, callback_info);
