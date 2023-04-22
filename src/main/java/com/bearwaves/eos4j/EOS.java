@@ -58,6 +58,12 @@ public class EOS {
         }
     }
 
+    public static class EpicAccountId extends EOSHandle {
+        EpicAccountId(long ptr) {
+            super(ptr);
+        }
+    }
+
     /*JNI
     #include <eos_sdk.h>
     #include <cstring>

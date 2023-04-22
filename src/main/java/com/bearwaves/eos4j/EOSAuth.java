@@ -12,6 +12,10 @@ public class EOSAuth {
         EOSAuthNative.login(handle, options, callback);
     }
 
+    public IdToken copyIdToken(EOS.EpicAccountId accountId) throws EOSException {
+        return EOSAuthNative.copyIdToken(handle, accountId.ptr);
+    }
+
     public enum CredentialsType {
         PASSWORD, EXCHANGE_CODE, PERSISTENT_AUTH, DEVICE_CODE, DEVELOPER, REFRESH_TOKEN, ACCOUNT_PORTAL, EXTERNAL_AUTH
     }
@@ -40,10 +44,10 @@ public class EOSAuth {
 
     public static class LoginCallbackInfo {
         public final int resultCode;
-        public final EOSHandle localUserId;
-        public final EOSHandle selectedAccountId;
+        public final EOS.EpicAccountId localUserId;
+        public final EOS.EpicAccountId selectedAccountId;
 
-        LoginCallbackInfo(int resultCode, EOSHandle localUserId, EOSHandle selectedAccountId) {
+        LoginCallbackInfo(int resultCode, EOS.EpicAccountId localUserId, EOS.EpicAccountId selectedAccountId) {
             this.resultCode = resultCode;
             this.localUserId = localUserId;
             this.selectedAccountId = selectedAccountId;
@@ -52,6 +56,24 @@ public class EOSAuth {
 
     public interface LoginCallback {
         void run(LoginCallbackInfo data);
+    }
+
+    public static class IdToken extends EOSHandle {
+        IdToken(long ptr) {
+            super(ptr);
+        }
+
+        public String getJsonWebToken() {
+            if (ptr == 0) {
+                return "";
+            }
+            return EOSAuthNative.getIdTokenJwt(ptr);
+        }
+
+        @Override
+        public String toString() {
+            return getJsonWebToken();
+        }
     }
 
 }
