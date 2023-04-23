@@ -33,6 +33,10 @@ public class EOSLogging {
             this.level = level;
         }
 
+        int getLevel() {
+            return level;
+        }
+
         static LogLevel fromInt(int i) {
             for (LogLevel value : values) {
                 if (value.level == i) {
@@ -83,6 +87,10 @@ public class EOSLogging {
 
         LogCategory(int category) {
             this.category = category;
+        }
+
+        int getCategory() {
+            return this.category;
         }
     }
 

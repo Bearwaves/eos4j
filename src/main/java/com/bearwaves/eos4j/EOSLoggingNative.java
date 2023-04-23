@@ -13,10 +13,16 @@ std::unique_ptr<CallbackAdapter> logging_callback;
 class EOSLoggingNative {
 
     static native int setLogLevel(EOSLogging.LogCategory category, EOSLogging.LogLevel level); /*
-        auto log_category = EOS4J::javaEnumValueFromObject(env, category);
-        auto log_level = EOS4J::javaEnumValueFromObject(env, level);
+        auto log_level_cls = env->FindClass("com/bearwaves/eos4j/EOSLogging$LogLevel");
+        auto get_level = env->GetMethodID(log_level_cls, "getLevel", "()I");
+        int level_int = env->CallIntMethod(level, get_level);
+
+        auto log_category_cls = env->FindClass("com/bearwaves/eos4j/EOSLogging$LogCategory");
+        auto get_category = env->GetMethodID(log_category_cls, "getCategory", "()I");
+        int category_int = env->CallIntMethod(category, get_category);
+
         return static_cast<int>(
-            EOS_Logging_SetLogLevel(static_cast<EOS_ELogCategory>(log_category), static_cast<EOS_ELogLevel>(log_level))
+            EOS_Logging_SetLogLevel(static_cast<EOS_ELogCategory>(category_int), static_cast<EOS_ELogLevel>(level_int))
         );
     */
 
