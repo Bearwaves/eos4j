@@ -27,6 +27,14 @@ public class EOSPlatform {
         return new EOSAuth(authHandle);
     }
 
+    public EOSConnect getConnectHandle() throws EOSException {
+        long connectHandle = EOSPlatformNative.getConnectHandle(handle);
+        if (connectHandle == 0) {
+            throw new EOSException("Failed to get connect handle");
+        }
+        return new EOSConnect(connectHandle);
+    }
+
     public static class Options {
         public final String productId;
         public final String sandboxId;

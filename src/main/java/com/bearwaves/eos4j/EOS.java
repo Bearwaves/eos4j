@@ -35,11 +35,11 @@ public class EOS {
     }
 
     public static void initialize(InitializeOptions options) throws EOSException {
-        throwIfErrorCode(initializeNative(options));
+        throwIfErrorCode(EOSNative.initialize(options));
     }
 
     public static void shutdown() throws EOSException {
-        throwIfErrorCode(shutdownNative());
+        throwIfErrorCode(EOSNative.shutdown());
     }
 
     public static void throwIfErrorCode(int resultCode) throws EOSException {
@@ -64,28 +64,42 @@ public class EOS {
         }
     }
 
-    /*JNI
-    #include <eos_sdk.h>
-    #include <cstring>
-    #include "jni_utils.h"
-    */
+    public static class ProductUserId extends EOSHandle {
+        ProductUserId(long ptr) {
+            super(ptr);
+        }
+    }
 
-    private static native int initializeNative(InitializeOptions options); /*
-        auto product_name = EOS4J::javaStringFromObjectField(env, options, "productName");
-        auto product_version = EOS4J::javaStringFromObjectField(env, options, "productVersion");
+    public static class ContinuanceToken extends EOSHandle {
+        ContinuanceToken(long ptr) {
+            super(ptr);
+        }
+    }
 
-        EOS_InitializeOptions sdk_options;
-        memset(&sdk_options, 0, sizeof(sdk_options));
-        sdk_options.ApiVersion = EOS_INITIALIZE_API_LATEST;
-        sdk_options.ProductName = product_name->c_str();
-        sdk_options.ProductVersion = product_version->c_str();
-        auto result = static_cast<int>(EOS_Initialize(&sdk_options));
+    public enum LoginCredentialType {
+        PASSWORD, EXCHANGE_CODE, PERSISTENT_AUTH, DEVICE_CODE, DEVELOPER, REFRESH_TOKEN, ACCOUNT_PORTAL, EXTERNAL_AUTH
+    }
 
-        return result;
-    */
-
-    private static native int shutdownNative(); /*
-        return static_cast<int>(EOS_Shutdown());
-    */
-
+    public enum ExternalCredentialType {
+        EPIC,
+        STEAM_APP_TICKET,
+        PSN_ID_TOKEN,
+        XBL_XSTS_TOKEN,
+        DISCORD_ACCESS_TOKEN,
+        GOG_SESSION_TICKET,
+        NINTENDO_ID_TOKEN,
+        NINTENDO_NSA_ID_TOKEN,
+        UPLAY_ACCESS_TOKEN,
+        OPENID_ACCESS_TOKEN,
+        DEVICEID_ACCESS_TOKEN,
+        APPLE_ID_TOKEN,
+        GOOGLE_ID_TOKEN,
+        OCULUS_USERID_NONCE,
+        ITCHIO_JWT,
+        ITCHIO_KEY,
+        EPIC_ID_TOKEN,
+        AMAZON_ACCESS_TOKEN,
+        STEAM_SESSION_TICKET
+    }
 }
+

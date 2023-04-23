@@ -37,4 +37,8 @@ class EOSPlatformNative {
     static native long getAuthHandle(long handle); /*
         return (long long) EOS_Platform_GetAuthInterface(reinterpret_cast<EOS_HPlatform>(handle));
     */
+
+    static native long getConnectHandle(long handle); /*
+        return (long long) EOS_Platform_GetConnectInterface(reinterpret_cast<EOS_HPlatform>(handle));
+    */
 }

@@ -10,7 +10,7 @@ package com.bearwaves.eos4j;
 class EOSAuthNative {
     static native void login(long handle, EOSAuth.LoginOptions options, EOSAuth.LoginCallback callback); /*
         auto creds_obj = EOS4J::javaObjectFromObjectField(env, options, "credentials", "Lcom/bearwaves/eos4j/EOSAuth$Credentials;");
-        auto credType = EOS4J::javaEnumValueFromObjectField(env, creds_obj, "type", "Lcom/bearwaves/eos4j/EOSAuth$CredentialsType;");
+        auto credType = EOS4J::javaEnumValueFromObjectField(env, creds_obj, "type", "Lcom/bearwaves/eos4j/EOS$LoginCredentialType;");
         auto id = EOS4J::javaStringFromObjectField(env, creds_obj, "id");
         auto token = EOS4J::javaStringFromObjectField(env, creds_obj, "token");
         auto scope_flags = EOS4J::javaIntFromObjectField(env, options, "scopeFlags");

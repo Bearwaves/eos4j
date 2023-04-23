@@ -16,16 +16,12 @@ public class EOSAuth {
         return EOSAuthNative.copyIdToken(handle, accountId.ptr);
     }
 
-    public enum CredentialsType {
-        PASSWORD, EXCHANGE_CODE, PERSISTENT_AUTH, DEVICE_CODE, DEVELOPER, REFRESH_TOKEN, ACCOUNT_PORTAL, EXTERNAL_AUTH
-    }
-
     public static class Credentials {
-        public final CredentialsType type;
+        public final EOS.LoginCredentialType type;
         public final String id;
         public final String token;
 
-        public Credentials(CredentialsType type, String id, String token) {
+        public Credentials(EOS.LoginCredentialType type, String id, String token) {
             this.type = type;
             this.id = id;
             this.token = token;
