@@ -74,6 +74,10 @@ public class EOSAuth {
         public String toString() {
             return getJsonWebToken();
         }
+
+        public void release() {
+            EOSAuthNative.releaseIdToken(ptr);
+        }
     }
 
 }

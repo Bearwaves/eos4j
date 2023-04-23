@@ -71,4 +71,9 @@ class EOSAuthNative {
         EOS_Auth_IdToken* token = reinterpret_cast<EOS_Auth_IdToken*>(idTokenPtr);
         return env->NewStringUTF(token->JsonWebToken);
     */
+
+    static native void releaseIdToken(long idTokenPtr); /*
+        EOS_Auth_IdToken* token = reinterpret_cast<EOS_Auth_IdToken*>(idTokenPtr);
+        EOS_Auth_IdToken_Release(token);
+    */
 }
