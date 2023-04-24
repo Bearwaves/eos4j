@@ -76,6 +76,32 @@ class EOSConnectNative {
         return env->NewObject(result_cls, result_ctor, (long long) token);
     */
 
+    static native void createUser(long handle, long continuanceToken, EOSConnect.CreateUserCallback callback); /*
+        EOS_Connect_CreateUserOptions create_user_options;
+        memset(&create_user_options, 0, sizeof(create_user_options));
+        create_user_options.ApiVersion = EOS_CONNECT_CREATEUSER_API_LATEST;
+        create_user_options.ContinuanceToken = reinterpret_cast<EOS_ContinuanceToken>(continuanceToken);
+
+        auto callback_adapter = new EOS4J::CallbackAdapter(env, callback);
+        EOS_Connect_CreateUser(reinterpret_cast<EOS_HConnect>(handle), &create_user_options, callback_adapter, [](const EOS_Connect_CreateUserCallbackInfo* data) -> void {
+            EOS4J::CallbackAdapter* callback_adapter = reinterpret_cast<EOS4J::CallbackAdapter*>(data->ClientData);
+            callback_adapter->attach([&](JNIEnv* env, jobject callback) -> void {
+                jclass puid_cls = env->FindClass("com/bearwaves/eos4j/EOS$ProductUserId");
+                jmethodID puid_ctor = env->GetMethodID(puid_cls, "<init>", "(J)V");
+                auto local_user_id = env->NewObject(puid_cls, puid_ctor, data->LocalUserId);
+
+                jclass cls = env->GetObjectClass(callback);
+                auto callback_info_class = env->FindClass("com/bearwaves/eos4j/EOSConnect$CreateUserCallbackInfo");
+                jmethodID callback_info_ctor = env->GetMethodID(callback_info_class, "<init>", "(ILcom/bearwaves/eos4j/EOS$ProductUserId;)V");
+                auto callback_info = env->NewObject(callback_info_class, callback_info_ctor, static_cast<int>(data->ResultCode), local_user_id);
+
+                jmethodID mid = env->GetMethodID(cls, "run", "(Lcom/bearwaves/eos4j/EOSConnect$CreateUserCallbackInfo;)V");
+                env->CallVoidMethod(callback, mid, callback_info);
+            });
+            delete callback_adapter;
+        });
+    */
+
     static native String getIdTokenJwt(long idTokenPtr); /*
         EOS_Connect_IdToken* token = reinterpret_cast<EOS_Connect_IdToken*>(idTokenPtr);
         return env->NewStringUTF(token->JsonWebToken);

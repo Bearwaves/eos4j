@@ -16,6 +16,10 @@ public class EOSConnect {
         return EOSConnectNative.copyIdToken(handle, localUserId.ptr);
     }
 
+    public void createUser(EOS.ContinuanceToken continuanceToken, CreateUserCallback callback) {
+        EOSConnectNative.createUser(handle, continuanceToken.ptr, callback);
+    }
+
     public static class Credentials {
         public final EOS.ExternalCredentialType type;
         public final String token;
@@ -56,6 +60,16 @@ public class EOSConnect {
         }
     }
 
+    public static class CreateUserCallbackInfo {
+        public final int resultCode;
+        public final EOS.ProductUserId localUserId;
+
+        CreateUserCallbackInfo(int resultCode, EOS.ProductUserId localUserId) {
+            this.resultCode = resultCode;
+            this.localUserId = localUserId;
+        }
+    }
+
     public static class IdToken extends EOSHandle {
         IdToken(long ptr) {
             super(ptr);
@@ -80,6 +94,10 @@ public class EOSConnect {
 
     public interface LoginCallback {
         void run(LoginCallbackInfo data);
+    }
+
+    public interface CreateUserCallback {
+        void run(CreateUserCallbackInfo data);
     }
 
 }
