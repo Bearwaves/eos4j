@@ -33,9 +33,9 @@ class EOSConnectNative {
             login_options.UserLoginInfo = &user_info;
         }
 
-        auto callback_adapter = new EOS4J::CallbackAdapter(env, callback);
-        EOS_Connect_Login(reinterpret_cast<EOS_HConnect>(handle), &login_options, callback_adapter, [](const EOS_Connect_LoginCallbackInfo* data) -> void {
-            EOS4J::CallbackAdapter* callback_adapter = reinterpret_cast<EOS4J::CallbackAdapter*>(data->ClientData);
+        auto callback_adapter = std::make_unique<EOS4J::CallbackAdapter>(env, callback);
+        EOS_Connect_Login(reinterpret_cast<EOS_HConnect>(handle), &login_options, callback_adapter.release(), [](const EOS_Connect_LoginCallbackInfo* data) -> void {
+            std::unique_ptr<EOS4J::CallbackAdapter> callback_adapter{reinterpret_cast<EOS4J::CallbackAdapter*>(data->ClientData)};
             callback_adapter->attach([&](JNIEnv* env, jobject callback) -> void {
                 jclass cls = env->GetObjectClass(callback);
 
@@ -53,7 +53,6 @@ class EOSConnectNative {
                 jmethodID mid = env->GetMethodID(cls, "run", "(Lcom/bearwaves/eos4j/EOSConnect$LoginCallbackInfo;)V");
                 env->CallVoidMethod(callback, mid, callback_info);
             });
-            delete callback_adapter;
         });
     */
 
@@ -82,9 +81,9 @@ class EOSConnectNative {
         create_user_options.ApiVersion = EOS_CONNECT_CREATEUSER_API_LATEST;
         create_user_options.ContinuanceToken = reinterpret_cast<EOS_ContinuanceToken>(continuanceToken);
 
-        auto callback_adapter = new EOS4J::CallbackAdapter(env, callback);
-        EOS_Connect_CreateUser(reinterpret_cast<EOS_HConnect>(handle), &create_user_options, callback_adapter, [](const EOS_Connect_CreateUserCallbackInfo* data) -> void {
-            EOS4J::CallbackAdapter* callback_adapter = reinterpret_cast<EOS4J::CallbackAdapter*>(data->ClientData);
+        auto callback_adapter = std::make_unique<EOS4J::CallbackAdapter>(env, callback);
+        EOS_Connect_CreateUser(reinterpret_cast<EOS_HConnect>(handle), &create_user_options, callback_adapter.release(), [](const EOS_Connect_CreateUserCallbackInfo* data) -> void {
+            std::unique_ptr<EOS4J::CallbackAdapter> callback_adapter{reinterpret_cast<EOS4J::CallbackAdapter*>(data->ClientData)};
             callback_adapter->attach([&](JNIEnv* env, jobject callback) -> void {
                 jclass puid_cls = env->FindClass("com/bearwaves/eos4j/EOS$ProductUserId");
                 jmethodID puid_ctor = env->GetMethodID(puid_cls, "<init>", "(J)V");
@@ -98,7 +97,6 @@ class EOSConnectNative {
                 jmethodID mid = env->GetMethodID(cls, "run", "(Lcom/bearwaves/eos4j/EOSConnect$CreateUserCallbackInfo;)V");
                 env->CallVoidMethod(callback, mid, callback_info);
             });
-            delete callback_adapter;
         });
     */
 
