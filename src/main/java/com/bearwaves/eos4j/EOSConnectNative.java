@@ -100,6 +100,31 @@ class EOSConnectNative {
         });
     */
 
+    static native void addNotifyAuthExpiration(long handle, EOSConnect.OnAuthExpirationCallback callback); /*
+        EOS_Connect_AddNotifyAuthExpirationOptions notify_options;
+        memset(&notify_options, 0, sizeof(notify_options));
+        notify_options.ApiVersion = EOS_CONNECT_ADDNOTIFYAUTHEXPIRATION_API_LATEST;
+
+        auto callback_adapter = std::make_unique<EOS4J::CallbackAdapter>(env, callback);
+        EOS_Connect_AddNotifyAuthExpiration(reinterpret_cast<EOS_HConnect>(handle), &notify_options, callback_adapter.release(), [](const EOS_Connect_AuthExpirationCallbackInfo* data) -> void {
+            std::unique_ptr<EOS4J::CallbackAdapter> callback_adapter{reinterpret_cast<EOS4J::CallbackAdapter*>(data->ClientData)};
+
+            callback_adapter->attach([&](JNIEnv* env, jobject callback) -> void {
+                jclass puid_cls = env->FindClass("com/bearwaves/eos4j/EOS$ProductUserId");
+                jmethodID puid_ctor = env->GetMethodID(puid_cls, "<init>", "(J)V");
+                auto local_user_id = env->NewObject(puid_cls, puid_ctor, data->LocalUserId);
+
+                jclass cls = env->GetObjectClass(callback);
+                auto callback_info_class = env->FindClass("com/bearwaves/eos4j/EOSConnect$AuthExpirationCallbackInfo");
+                jmethodID callback_info_ctor = env->GetMethodID(callback_info_class, "<init>", "(Lcom/bearwaves/eos4j/EOS$ProductUserId;)V");
+                auto callback_info = env->NewObject(callback_info_class, callback_info_ctor, local_user_id);
+
+                jmethodID mid = env->GetMethodID(cls, "run", "(Lcom/bearwaves/eos4j/EOSConnect$AuthExpirationCallbackInfo;)V");
+                env->CallVoidMethod(callback, mid, callback_info);
+            });
+        });
+    */
+
     static native String getIdTokenJwt(long idTokenPtr); /*
         EOS_Connect_IdToken* token = reinterpret_cast<EOS_Connect_IdToken*>(idTokenPtr);
         return env->NewStringUTF(token->JsonWebToken);

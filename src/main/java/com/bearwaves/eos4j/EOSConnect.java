@@ -20,6 +20,10 @@ public class EOSConnect {
         EOSConnectNative.createUser(handle, continuanceToken.ptr, callback);
     }
 
+    public void addNotifyAuthExpiration(OnAuthExpirationCallback callback) {
+        EOSConnectNative.addNotifyAuthExpiration(handle, callback);
+    }
+
     public static class Credentials {
         public final EOS.ExternalCredentialType type;
         public final String token;
@@ -70,6 +74,14 @@ public class EOSConnect {
         }
     }
 
+    public static class AuthExpirationCallbackInfo {
+        public final EOS.ProductUserId localUserId;
+
+        AuthExpirationCallbackInfo(EOS.ProductUserId localUserId) {
+            this.localUserId = localUserId;
+        }
+    }
+
     public static class IdToken extends EOSHandle {
         IdToken(long ptr) {
             super(ptr);
@@ -98,6 +110,10 @@ public class EOSConnect {
 
     public interface CreateUserCallback {
         void run(CreateUserCallbackInfo data);
+    }
+
+    public interface OnAuthExpirationCallback {
+        void run(AuthExpirationCallbackInfo data);
     }
 
 }
