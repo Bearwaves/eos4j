@@ -41,4 +41,8 @@ class EOSPlatformNative {
     static native long getConnectHandle(long handle); /*
         return (long long) EOS_Platform_GetConnectInterface(reinterpret_cast<EOS_HPlatform>(handle));
     */
+
+    static native long getAchievementsHandle(long handle); /*
+        return (long long) EOS_Platform_GetAchievementsInterface(reinterpret_cast<EOS_HPlatform>(handle));
+    */
 }

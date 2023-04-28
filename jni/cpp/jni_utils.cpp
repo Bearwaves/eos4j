@@ -10,7 +10,24 @@ JavaString::JavaString(JNIEnv* env, jstring str)
 }
 
 JavaString::~JavaString() {
-	env->ReleaseStringUTFChars(str, m_c_str);
+	if (m_c_str) {
+		env->ReleaseStringUTFChars(str, m_c_str);
+		m_c_str = nullptr;
+	}
+}
+
+JavaString::JavaString(JavaString&& other) {
+	this->env = other.env;
+	this->str = other.str;
+	this->m_c_str = other.m_c_str;
+	other.m_c_str = nullptr;
+}
+
+JavaString& JavaString::operator=(JavaString&& other) {
+	this->env = other.env;
+	this->str = other.str;
+	this->m_c_str = other.m_c_str;
+	other.m_c_str = nullptr;
 }
 
 std::unique_ptr<JavaString>
@@ -19,6 +36,21 @@ EOS4J::javaStringFromObjectField(JNIEnv* env, jobject obj, const char* field) {
 	jfieldID fid = env->GetFieldID(cls, field, "Ljava/lang/String;");
 	jstring str = (jstring)env->GetObjectField(obj, fid);
 	return std::make_unique<JavaString>(env, std::move(str));
+}
+
+std::vector<JavaString> EOS4J::javaStringVectorFromObjectField(
+	JNIEnv* env, jobject obj, const char* field) {
+	jclass cls = env->GetObjectClass(obj);
+	jfieldID fid = env->GetFieldID(cls, field, "[Ljava/lang/String;");
+	jobjectArray array = (jobjectArray)env->GetObjectField(obj, fid);
+	int string_count = env->GetArrayLength(array);
+
+	std::vector<JavaString> strings;
+	for (int i = 0; i < string_count; i++) {
+		jstring string = (jstring)env->GetObjectArrayElement(array, i);
+		strings.push_back(JavaString{env, string});
+	}
+	return strings;
 }
 
 jobject EOS4J::javaObjectFromObjectField(
@@ -41,6 +73,13 @@ jint EOS4J::javaIntFromObjectField(
 	jclass cls = env->GetObjectClass(obj);
 	jfieldID fid = env->GetFieldID(cls, field, "I");
 	return env->GetIntField(obj, fid);
+}
+
+jlong EOS4J::javaLongFromObjectField(
+	JNIEnv* env, jobject obj, const char* field) {
+	jclass cls = env->GetObjectClass(obj);
+	jfieldID fid = env->GetFieldID(cls, field, "J");
+	return env->GetLongField(obj, fid);
 }
 
 jint EOS4J::javaEnumValueFromObject(JNIEnv* env, jobject obj) {

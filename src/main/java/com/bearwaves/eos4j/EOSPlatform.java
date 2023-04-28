@@ -35,6 +35,14 @@ public class EOSPlatform {
         return new EOSConnect(connectHandle);
     }
 
+    public EOSAchievements getAchievementsHandle() throws EOSException {
+        long achievementsHandle = EOSPlatformNative.getAchievementsHandle(handle);
+        if (achievementsHandle == 0) {
+            throw new EOSException("Failed to get achievements handle");
+        }
+        return new EOSAchievements(achievementsHandle);
+    }
+
     public static class Options {
         public final String productId;
         public final String sandboxId;
