@@ -35,6 +35,14 @@ public class EOSPlatform {
         return new EOSConnect(connectHandle);
     }
 
+    public EOSStats getStatsHandle() throws EOSException {
+        long statsHandle = EOSPlatformNative.getStatsHandle(handle);
+        if (statsHandle == 0) {
+            throw new EOSException("Failed to get stats handle");
+        }
+        return new EOSStats(statsHandle);
+    }
+
     public EOSAchievements getAchievementsHandle() throws EOSException {
         long achievementsHandle = EOSPlatformNative.getAchievementsHandle(handle);
         if (achievementsHandle == 0) {

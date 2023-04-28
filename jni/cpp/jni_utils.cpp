@@ -28,6 +28,7 @@ JavaString& JavaString::operator=(JavaString&& other) {
 	this->str = other.str;
 	this->m_c_str = other.m_c_str;
 	other.m_c_str = nullptr;
+	return *this;
 }
 
 std::unique_ptr<JavaString>

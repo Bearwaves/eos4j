@@ -5,7 +5,6 @@ package com.bearwaves.eos4j;
 #include <cstring>
 #include "jni_utils.h"
 #include "callback_adapter.h"
-#include <iostream>
 */
 
 class EOSAchievementsNative {
