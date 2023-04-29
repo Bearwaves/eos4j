@@ -18,6 +18,10 @@ public class EOSStats {
         EOSStatsNative.queryStats(handle, options, callback);
     }
 
+    public Stat copyStatByName(CopyStatByNameOptions options) throws EOSException {
+        return EOSStatsNative.copyStatByName(handle, options);
+    }
+
     public static class IngestStatOptions {
         public final EOS.ProductUserId localUserId;
         public final EOS.ProductUserId targetUserId;
@@ -53,6 +57,35 @@ public class EOSStats {
             this.endTime = endTime;
             this.statNames = statNames;
             this.targetUserId = targetUserId;
+        }
+    }
+
+    public static class Stat extends EOSHandle {
+        public final String name;
+        public final Date startTime;
+        public final Date endTime;
+        public final int value;
+
+        Stat(long handle, String name, Date startTime, Date endTime, int value) {
+            super(handle);
+            this.name = name;
+            this.startTime = startTime;
+            this.endTime = endTime;
+            this.value = value;
+        }
+
+        public void release() {
+            EOSStatsNative.releaseStat(ptr);
+        }
+    }
+
+    public static class CopyStatByNameOptions {
+        public final EOS.ProductUserId targetUserId;
+        public final String name;
+
+        public CopyStatByNameOptions(EOS.ProductUserId targetUserId, String name) {
+            this.targetUserId = targetUserId;
+            this.name = name;
         }
     }
 
