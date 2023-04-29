@@ -1,5 +1,7 @@
 package com.bearwaves.eos4j;
 
+import java.util.Date;
+
 public class EOSStats {
 
     private final long handle;
@@ -10,6 +12,10 @@ public class EOSStats {
 
     public void ingestStat(IngestStatOptions options, OnIngestStatCompleteCallback callback) {
         EOSStatsNative.ingestStat(handle, options, callback);
+    }
+
+    public void queryStats(QueryStatsOptions options, OnQueryStatsCompleteCallback callback) {
+        EOSStatsNative.queryStats(handle, options, callback);
     }
 
     public static class IngestStatOptions {
@@ -34,6 +40,22 @@ public class EOSStats {
         }
     }
 
+    public static class QueryStatsOptions {
+        public final EOS.ProductUserId localUserId;
+        public final Date startTime;
+        public final Date endTime;
+        public final String[] statNames;
+        public final EOS.ProductUserId targetUserId;
+
+        public QueryStatsOptions(EOS.ProductUserId localUserId, Date startTime, Date endTime, String[] statNames, EOS.ProductUserId targetUserId) {
+            this.localUserId = localUserId;
+            this.startTime = startTime;
+            this.endTime = endTime;
+            this.statNames = statNames;
+            this.targetUserId = targetUserId;
+        }
+    }
+
     public static class IngestStatCompleteCallbackInfo {
         public final int resultCode;
         public final EOS.ProductUserId localUserId;
@@ -47,8 +69,24 @@ public class EOSStats {
 
     }
 
+    public static class OnQueryStatsCompleteCallbackInfo {
+        public final int resultCode;
+        public final EOS.ProductUserId localUserId;
+        public final EOS.ProductUserId targetUserId;
+
+        OnQueryStatsCompleteCallbackInfo(int resultCode, EOS.ProductUserId localUserId, EOS.ProductUserId targetUserId) {
+            this.resultCode = resultCode;
+            this.localUserId = localUserId;
+            this.targetUserId = targetUserId;
+        }
+    }
+
     public interface OnIngestStatCompleteCallback {
         void run(IngestStatCompleteCallbackInfo data);
+    }
+
+    public interface OnQueryStatsCompleteCallback {
+        void run(OnQueryStatsCompleteCallbackInfo data);
     }
 
 }

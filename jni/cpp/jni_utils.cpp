@@ -41,12 +41,15 @@ EOS4J::javaStringFromObjectField(JNIEnv* env, jobject obj, const char* field) {
 
 std::vector<JavaString> EOS4J::javaStringVectorFromObjectField(
 	JNIEnv* env, jobject obj, const char* field) {
+	std::vector<JavaString> strings;
 	jclass cls = env->GetObjectClass(obj);
 	jfieldID fid = env->GetFieldID(cls, field, "[Ljava/lang/String;");
 	jobjectArray array = (jobjectArray)env->GetObjectField(obj, fid);
+	if (array == nullptr) {
+		return strings;
+	}
 	int string_count = env->GetArrayLength(array);
 
-	std::vector<JavaString> strings;
 	for (int i = 0; i < string_count; i++) {
 		jstring string = (jstring)env->GetObjectArrayElement(array, i);
 		strings.push_back(JavaString{env, string});
