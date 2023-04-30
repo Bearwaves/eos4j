@@ -22,6 +22,10 @@ public class EOSException extends Exception {
         return "EOS Error code: " + getErrorString(errorCode);
     }
 
+    public EOSResultCode getCode() {
+        return EOSResultCode.fromInt(this.errorCode);
+    }
+
     /*JNI
     #include <eos_sdk.h>
     */

@@ -124,8 +124,7 @@ class EOSStatsNative {
         EOS_Stats_Stat* out_stat;
         auto copy_result = EOS_Stats_CopyStatByName(reinterpret_cast<EOS_HStats>(handle), &copy_options, &out_stat);
         if (copy_result != EOS_EResult::EOS_Success) {
-            jclass ex_cls = env->FindClass("com/bearwaves/eos4j/EOSException");
-            env->ThrowNew(ex_cls, EOS_EResult_ToString(copy_result));
+            EOS4J::throwEOSException(env, static_cast<int>(copy_result));
             return nullptr;
         }
 

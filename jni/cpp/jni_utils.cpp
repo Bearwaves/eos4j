@@ -91,3 +91,10 @@ jint EOS4J::javaEnumValueFromObject(JNIEnv* env, jobject obj) {
 	jmethodID ord = env->GetMethodID(enum_cls, "ordinal", "()I");
 	return env->CallIntMethod(obj, ord);
 }
+
+void EOS4J::throwEOSException(JNIEnv* env, int result_code) {
+	jclass cls = env->FindClass("com/bearwaves/eos4j/EOSException");
+	jmethodID ctor = env->GetMethodID(cls, "<init>", "(I)V");
+	jobject exception = env->NewObject(cls, ctor, result_code);
+	env->Throw((jthrowable)exception);
+}
