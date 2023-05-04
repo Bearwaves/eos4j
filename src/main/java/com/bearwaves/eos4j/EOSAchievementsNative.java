@@ -18,7 +18,7 @@ class EOSAchievementsNative {
         auto user_id = EOS4J::javaLongFromObjectField(env, user_id_obj, "ptr");
         std::vector<EOS4J::JavaString> achievement_ids = EOS4J::javaStringVectorFromObjectField(env, options, "achievementIds");
         const char* ids[achievement_ids.size()];
-        for (int i = 0; i < achievement_ids.size(); i++) {
+        for (size_t i = 0; i < achievement_ids.size(); i++) {
             ids[i] = achievement_ids.at(i).c_str();
         }
 

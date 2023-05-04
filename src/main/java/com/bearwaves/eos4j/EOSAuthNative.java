@@ -19,7 +19,9 @@ class EOSAuthNative {
         memset(&credentials, 0, sizeof(credentials));
         credentials.ApiVersion = EOS_AUTH_CREDENTIALS_API_LATEST;
         credentials.Type = static_cast<EOS_ELoginCredentialType>(credType);
-        credentials.Id = id->c_str();
+        if (id) {
+            credentials.Id = id->c_str();
+        }
         credentials.Token = token->c_str();
 
         EOS_Auth_LoginOptions login_options;

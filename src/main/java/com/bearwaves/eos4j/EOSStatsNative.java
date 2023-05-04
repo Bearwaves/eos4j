@@ -76,7 +76,7 @@ class EOSStatsNative {
 
         std::vector<EOS4J::JavaString> stat_names = EOS4J::javaStringVectorFromObjectField(env, options, "statNames");
         const char* stats[stat_names.size()];
-        for (int i = 0; i < stat_names.size(); i++) {
+        for (size_t i = 0; i < stat_names.size(); i++) {
             stats[i] = stat_names.at(i).c_str();
         }
 
