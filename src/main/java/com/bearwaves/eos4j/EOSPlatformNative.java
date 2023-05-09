@@ -13,6 +13,7 @@ class EOSPlatformNative {
         auto deployment_id = EOS4J::javaStringFromObjectField(env, options, "deploymentId");
         auto client_id = EOS4J::javaStringFromObjectField(env, options, "clientId");
         auto client_secret = EOS4J::javaStringFromObjectField(env, options, "clientSecret");
+        int flags = EOS4J::javaIntFromObjectField(env, options, "flags");
 
         EOS_Platform_Options platform_options;
         std::memset(&platform_options, 0, sizeof(platform_options));
@@ -20,6 +21,7 @@ class EOSPlatformNative {
         platform_options.ProductId = product_id->c_str();
         platform_options.SandboxId = sandbox_id->c_str();
         platform_options.DeploymentId = deployment_id->c_str();
+        platform_options.Flags = flags;
         platform_options.ClientCredentials.ClientId = client_id->c_str();
         platform_options.ClientCredentials.ClientSecret = client_secret->c_str();
         EOS_HPlatform platform_interface = EOS_Platform_Create(&platform_options);

@@ -57,13 +57,35 @@ public class EOSPlatform {
         public final String deploymentId;
         public final String clientId;
         public final String clientSecret;
+        public final int flags;
 
-        public Options(String productId, String sandboxId, String deploymentId, String clientId, String clientSecret) {
+        public Options(String productId, String sandboxId, String deploymentId, String clientId, String clientSecret, int flags) {
             this.productId = productId;
             this.sandboxId = sandboxId;
             this.deploymentId = deploymentId;
             this.clientId = clientId;
             this.clientSecret = clientSecret;
+            this.flags = flags;
+        }
+    }
+
+    public enum Flag {
+        LOADING_IN_EDITOR(0x00001),
+        DISABLE_OVERLAY(0x00002),
+        DISABLE_SOCIAL_OVERLAY(0x00004),
+        RESERVED1(0x00008),
+        WINDOWS_ENABLE_OVERLAY_D3D9(0x00010),
+        WINDOWS_ENABLE_OVERLAY_D3D10(0x00020),
+        WINDOWS_ENABLE_OVERLAY_OPENGL(0x00040);
+
+        private final int value;
+
+        Flag(int value) {
+            this.value = value;
+        }
+
+        public int getValue() {
+            return this.value;
         }
     }
 }
