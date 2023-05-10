@@ -25,7 +25,7 @@ public class EOSTest {
     @Test
     void createsAndReleasesCorrectly() throws EOSException {
         Exception exception = assertThrows(EOSException.class, () -> {
-            new EOSPlatform(new EOSPlatform.Options("", "", "", "", ""));
+            new EOSPlatform(new EOSPlatform.Options("", "", "", "", "", 0));
         });
         assertEquals("Failed to create platform handle", exception.getMessage());
 
@@ -34,7 +34,8 @@ public class EOSTest {
                 System.getenv("EOS4J_TEST_SANDBOX_ID"),
                 System.getenv("EOS4J_TEST_DEPLOYMENT_ID"),
                 System.getenv("EOS4J_TEST_CLIENT_ID"),
-                System.getenv("EOS4J_TEST_CLIENT_SECRET")
+                System.getenv("EOS4J_TEST_CLIENT_SECRET"),
+                0
         ));
 
         EOSLogging.setLogLevel(EOSLogging.LogCategory.ALL_CATEGORIES, EOSLogging.LogLevel.VERY_VERBOSE);

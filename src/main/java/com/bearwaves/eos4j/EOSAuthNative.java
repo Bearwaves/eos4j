@@ -49,6 +49,33 @@ class EOSAuthNative {
         });
     */
 
+    static native void logout(long handle, EOSAuth.LogoutOptions options, EOSAuth.LogoutCallback callback); /*
+        auto local_user_id_obj = EOS4J::javaObjectFromObjectField(env, options, "localUserId", "Lcom/bearwaves/eos4j/EOS$EpicAccountId;");
+        auto local_user_id = EOS4J::javaLongFromObjectField(env, local_user_id_obj, "ptr");
+
+        EOS_Auth_LogoutOptions logout_options;
+        logout_options.ApiVersion = EOS_AUTH_LOGOUT_API_LATEST;
+        logout_options.LocalUserId = reinterpret_cast<EOS_EpicAccountId>(local_user_id);
+
+        auto callback_adapter = std::make_unique<EOS4J::CallbackAdapter>(env, callback);
+        EOS_Auth_Logout(reinterpret_cast<EOS_HAuth>(handle), &logout_options, callback_adapter.release(), [](const EOS_Auth_LogoutCallbackInfo* data) -> void {
+            std::unique_ptr<EOS4J::CallbackAdapter> callback_adapter{reinterpret_cast<EOS4J::CallbackAdapter*>(data->ClientData)};
+            callback_adapter->attach([&](JNIEnv* env, jobject callback) -> void {
+                jclass cls = env->GetObjectClass(callback);
+                jclass ptr_class = env->FindClass("com/bearwaves/eos4j/EOS$EpicAccountId");
+
+                jmethodID ptr_ctor = env->GetMethodID(ptr_class, "<init>", "(J)V");
+                auto callback_info_class = env->FindClass("com/bearwaves/eos4j/EOSAuth$LogoutCallbackInfo");
+                jmethodID callback_info_ctor = env->GetMethodID(callback_info_class, "<init>", "(ILcom/bearwaves/eos4j/EOS$EpicAccountId;)V");
+                auto local_user_id = env->NewObject(ptr_class, ptr_ctor, data->LocalUserId);
+                auto callback_info = env->NewObject(callback_info_class, callback_info_ctor, static_cast<int>(data->ResultCode), local_user_id);
+
+                jmethodID mid = env->GetMethodID(cls, "run", "(Lcom/bearwaves/eos4j/EOSAuth$LogoutCallbackInfo;)V");
+                env->CallVoidMethod(callback, mid, callback_info);
+            });
+        });
+    */
+
     static native EOSAuth.IdToken copyIdToken(long handle, long epicAccountIdPtr) throws EOSException; /*
         EOS_Auth_IdToken* token;
         EOS_EpicAccountId account_id = reinterpret_cast<EOS_EpicAccountId>(epicAccountIdPtr);
@@ -76,5 +103,33 @@ class EOSAuthNative {
     static native void releaseIdToken(long idTokenPtr); /*
         EOS_Auth_IdToken* token = reinterpret_cast<EOS_Auth_IdToken*>(idTokenPtr);
         EOS_Auth_IdToken_Release(token);
+    */
+
+    static native EOSAuth.AuthToken copyUserAuthToken(long handle, long epicAccountIdPtr) throws EOSException; /*
+        EOS_Auth_Token* token;
+        EOS_EpicAccountId account_id = reinterpret_cast<EOS_EpicAccountId>(epicAccountIdPtr);
+
+        EOS_Auth_CopyUserAuthTokenOptions copy_options;
+        copy_options.ApiVersion = EOS_AUTH_COPYUSERAUTHTOKEN_API_LATEST;
+        auto copy_result = EOS_Auth_CopyUserAuthToken(reinterpret_cast<EOS_HAuth>(handle), &copy_options, account_id, &token);
+        if (copy_result != EOS_EResult::EOS_Success) {
+            jclass ex_cls = env->FindClass("com/bearwaves/eos4j/EOSException");
+            env->ThrowNew(ex_cls, EOS_EResult_ToString(copy_result));
+            return nullptr;
+        }
+
+        jclass result_cls = env->FindClass("com/bearwaves/eos4j/EOSAuth$AuthToken");
+        jmethodID result_ctor = env->GetMethodID(result_cls, "<init>", "(J)V");
+        return env->NewObject(result_cls, result_ctor, (long long) token);
+    */
+
+    static native String getAuthTokenRefreshToken(long tokenPtr); /*
+        EOS_Auth_Token* token = reinterpret_cast<EOS_Auth_Token*>(tokenPtr);
+        return env->NewStringUTF(token->RefreshToken);
+    */
+
+    static native void releaseAuthToken(long tokenPtr); /*
+        EOS_Auth_Token* token = reinterpret_cast<EOS_Auth_Token*>(tokenPtr);
+        EOS_Auth_Token_Release(token);
     */
 }

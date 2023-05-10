@@ -12,8 +12,16 @@ public class EOSAuth {
         EOSAuthNative.login(handle, options, callback);
     }
 
+    public void logout(LogoutOptions options, LogoutCallback callback) {
+        EOSAuthNative.logout(handle, options, callback);
+    }
+
     public IdToken copyIdToken(EOS.EpicAccountId accountId) throws EOSException {
         return EOSAuthNative.copyIdToken(handle, accountId.ptr);
+    }
+
+    public AuthToken copyUserAuthToken(EOS.EpicAccountId accountId) throws EOSException {
+        return EOSAuthNative.copyUserAuthToken(handle, accountId.ptr);
     }
 
     public static class Credentials {
@@ -50,8 +58,30 @@ public class EOSAuth {
         }
     }
 
+    public static class LogoutOptions {
+        public final EOS.EpicAccountId localUserId;
+
+        public LogoutOptions(EOS.EpicAccountId localUserId) {
+            this.localUserId = localUserId;
+        }
+    }
+
+    public static class LogoutCallbackInfo {
+        public final int resultCode;
+        public final EOS.EpicAccountId localUserId;
+
+        public LogoutCallbackInfo(int resultCode, EOS.EpicAccountId localUserId) {
+            this.resultCode = resultCode;
+            this.localUserId = localUserId;
+        }
+    }
+
     public interface LoginCallback {
         void run(LoginCallbackInfo data);
+    }
+
+    public interface LogoutCallback {
+        void run(LogoutCallbackInfo data);
     }
 
     public static class IdToken extends EOSHandle {
@@ -73,6 +103,28 @@ public class EOSAuth {
 
         public void release() {
             EOSAuthNative.releaseIdToken(ptr);
+        }
+    }
+
+    public static class AuthToken extends EOSHandle {
+        AuthToken(long ptr) {
+            super(ptr);
+        }
+
+        public String getRefreshToken() {
+            if (ptr == 0) {
+                return "";
+            }
+            return EOSAuthNative.getAuthTokenRefreshToken(ptr);
+        }
+
+        @Override
+        public String toString() {
+            return getRefreshToken();
+        }
+
+        public void release() {
+            EOSAuthNative.releaseAuthToken(ptr);
         }
     }
 
