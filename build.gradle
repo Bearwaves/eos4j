@@ -9,10 +9,14 @@ buildscript {
 
 plugins {
     id 'java-library'
+    id 'maven-publish'
 }
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
+
+group = "com.bearwaves"
+version = "1.0.0"
 
 repositories {
     mavenCentral()
@@ -38,7 +42,7 @@ sourceSets {
 }
 
 tasks.named('test') {
-    sourceSets.main.resources.srcDirs += "jni/EOS/SDK/Bin"
+    sourceSets.test.resources.srcDirs += "jni/EOS/SDK/Bin"
 
     def localProperties = new Properties()
     def propertiesFile = rootProject.file("local.properties")
@@ -79,5 +83,20 @@ jnigen {
     }
     add(Linux, x64) {
         libraries += "-L" + file("./jni/EOS/SDK/Bin").absolutePath + " -lEOSSDK-Linux-Shipping"
+    }
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            artifactId = "eos4j"
+            from components.java
+
+            pom {
+                name = "eos4j"
+                description = "Java wrapper for Epic Online Services SDK"
+                url = "https://github.com/Bearwaves/eos4j"
+            }
+        }
     }
 }
