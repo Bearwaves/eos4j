@@ -1,0 +1,156 @@
+name: Publish snapshot
+concurrency: publish
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  buildMacOSNatives:
+    name: Build macOS natives
+    runs-on: macos-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup Java
+        uses: actions/setup-java@v3
+        with:
+          java-version: '11'
+          distribution: 'adopt'
+          cache: gradle
+      - name: Fetch EOS SDK
+        run: |
+          mkdir -p jni/EOS
+          curl -L 'https://dev.epicgames.com/api/sdk/download?archive_id=496&archive_type=sdk' \
+            -o sdk.zip
+          unzip sdk.zip -d jni/EOS
+          rm sdk.zip
+      - name: Build natives
+        run: |
+          ./gradlew jnigenBuild
+      - name: Upload x64 artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: "macosx64"
+          path: "libs/macosx64"
+          retention-days: 1
+      - name: Upload ARM artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: "macosxarm64"
+          path: "libs/macosxarm64"
+          retention-days: 1
+
+  buildWindowsNatives:
+    name: Build Windows natives
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Install mingw-w64
+        run: |
+          sudo apt-get update && sudo apt-get install -y mingw-w64
+      - name: Setup Java
+        uses: actions/setup-java@v3
+        with:
+          java-version: '11'
+          distribution: 'adopt'
+          cache: gradle
+      - name: Fetch EOS SDK
+        run: |
+          mkdir -p jni/EOS
+          curl -L 'https://dev.epicgames.com/api/sdk/download?archive_id=496&archive_type=sdk' \
+            -o sdk.zip
+          unzip sdk.zip -d jni/EOS
+          rm sdk.zip
+      - name: Build natives
+        run: |
+          ./gradlew jnigenBuildWindows64
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: "windows64"
+          path: "libs/windows64"
+          retention-days: 1
+
+  buildLinuxNatives:
+    name: Build Linux natives
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup Java
+        uses: actions/setup-java@v3
+        with:
+          java-version: '11'
+          distribution: 'adopt'
+          cache: gradle
+      - name: Fetch EOS SDK
+        run: |
+          mkdir -p jni/EOS
+          curl -L 'https://dev.epicgames.com/api/sdk/download?archive_id=496&archive_type=sdk' \
+            -o sdk.zip
+          unzip sdk.zip -d jni/EOS
+          rm sdk.zip
+      - name: Build natives
+        run: |
+          ./gradlew jnigenBuild
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: "linux64"
+          path: "libs/linux64"
+          retention-days: 1
+
+  buildJar:
+    name: Build JAR and publish
+    runs-on: ubuntu-latest
+    needs: [ buildMacOSNatives, buildLinuxNatives, buildWindowsNatives ]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup Java
+        uses: actions/setup-java@v3
+        with:
+          java-version: '11'
+          distribution: 'adopt'
+          cache: gradle
+      - name: Setup GPG
+        run: |
+          cat <(echo -e "${{ secrets.MVN_GPG_KEY }}") | gpg --batch --import
+      - name: Download Windows artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: "windows64"
+          path: "libs/windows64"
+      - name: Download Linux artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: "linux64"
+          path: "libs/linux64"
+      - name: Download maxOS x64 artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: "macosx64"
+          path: "libs/macosx64"
+      - name: Download macOS ARM artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: "macosxarm64"
+          path: "libs/macosxarm64"
+      - name: Build JAR
+        run: |
+          ./gradlew jar
+      - name: Upload JAR
+        uses: actions/upload-artifact@v3
+        with:
+          name: "eos4j"
+          path: "build/libs/eos4j-*.jar"
+      - name: Publish to Maven
+        env:
+          ORG_GRADLE_PROJECT_signingKey: "${{ secrets.MVN_GPG_KEY }}"
+          ORG_GRADLE_PROJECT_signingPassword: "${{ secrets.MVN_GPG_PASSWORD }}"
+        run: |
+          ./gradlew publishMavenPublicationToMavenRepository \
+            -PmavenUsername="${{ secrets.SONATYPE_USERNAME }}" \
+            -PmavenPassword="${{ secrets.SONATYPE_PASSWORD }}"

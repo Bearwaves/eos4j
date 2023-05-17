@@ -10,13 +10,14 @@ buildscript {
 plugins {
     id 'java-library'
     id 'maven-publish'
+    id 'signing'
 }
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 group = "com.bearwaves"
-version = "1.0.0"
+version = "1.0.0-SNAPSHOT"
 
 repositories {
     mavenCentral()
@@ -96,7 +97,31 @@ publishing {
                 name = "eos4j"
                 description = "Java wrapper for Epic Online Services SDK"
                 url = "https://github.com/Bearwaves/eos4j"
+
+                developers {
+                    developer {
+                        id = 'JoelOtter'
+                        name = 'Joel Auterson'
+                        email = 'joel@bearwaves.com'
+                    }
+                }
             }
         }
     }
+
+    repositories {
+        maven {
+            def releasesRepoUrl = "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/"
+            def snapshotsRepoUrl = "https://s01.oss.sonatype.org/content/repositories/snapshots"
+            url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
+            credentials(PasswordCredentials)
+        }
+    }
+}
+
+signing {
+    def signingKey = findProperty("signingKey")
+    def signingPassword = findProperty("signingPassword")
+    useInMemoryPgpKeys(signingKey, signingPassword)
+    sign publishing.publications.maven
 }
