@@ -25,7 +25,7 @@ your own.
 
 Built your game using eos4j? Submit a pull request to put it here!
 
-[![Feud](https://cdn1.epicgames.com/spt-assets/68be7d7f9c75454eba71957bbbbf2e66/feud-am8w9.jpg?h=480&quality=medium&resize=1&w=360)](https://store.epicgames.com/en-US/p/feud-19b141)
+[![Feud](https://cdn1.epicgames.com/spt-assets/68be7d7f9c75454eba71957bbbbf2e66/feud-am8w9.jpg?h=240&quality=medium&resize=1&w=180)](https://store.epicgames.com/en-US/p/feud-19b141)
 
 ## Getting started
 
@@ -68,9 +68,9 @@ like so:
 ```java
 import com.bearwaves.eos4j.EOS;
 
-if(!EOS.loadLibraries()){
-        throw new RuntimeException("Couldn't load EOS libraries");
-        }
+if (!EOS.loadLibraries()){
+    throw new RuntimeException("Couldn't load EOS libraries");
+}
 ```
 
 From here on you can follow the EOS C SDK documentation and adapt it as you see fit.
