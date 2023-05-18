@@ -50,6 +50,8 @@ dependencies {
 }
 ```
 
+If you just want the JAR, see the [releases page](https://github.com/Bearwaves/eos4j/releases).
+
 eos4j provides utilities to load the native libraries, but it **does
 not include** the natives for the EOS SDK itself due to licensing
 restrictions. You should download the SDK yourself from [EOS portal](
