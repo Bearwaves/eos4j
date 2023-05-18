@@ -87,6 +87,11 @@ jnigen {
     }
 }
 
+java {
+    withSourcesJar()
+    withJavadocJar()
+}
+
 publishing {
     publications {
         maven(MavenPublication) {
@@ -104,6 +109,19 @@ publishing {
                         name = 'Joel Auterson'
                         email = 'joel@bearwaves.com'
                     }
+                }
+
+                licenses {
+                    license {
+                        name = 'MIT License'
+                        url = 'http://www.opensource.org/licenses/mit-license.php'
+                    }
+                }
+
+                scm {
+                    connection = 'scm:git:https://github.com/Bearwaves/eos4j.git'
+                    developerConnection = 'scm:git:https://github.com/Bearwaves/eos4j.git'
+                    url = 'https://github.com/Bearwaves/eos4j'
                 }
             }
         }
