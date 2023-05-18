@@ -1,5 +1,9 @@
 # eos4j
 
+![](https://img.shields.io/maven-central/v/com.bearwaves/eos4j)
+![](https://img.shields.io/nexus/s/com.bearwaves/eos4j?server=https%3A%2F%2Fs01.oss.sonatype.org)
+![](https://img.shields.io/github/license/Bearwaves/eos4j)
+
 **eos4j** is a minimal Java wrapper around the Epic Online Services (EOS) SDK.
 It provides a Java-native interface while aiming to conform very closely to
 the structure of the EOS C SDK.
