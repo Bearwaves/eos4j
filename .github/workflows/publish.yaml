@@ -1,9 +1,10 @@
-name: Publish snapshot
+name: Publish
 concurrency: publish
 on:
   push:
     branches:
       - master
+      - release/*
 
 jobs:
   buildMacOSNatives:
