@@ -12,6 +12,9 @@ It was originally implemented to support the release of [Feud](
 https://store.epicgames.com/en-US/p/feud-19b141
 ) on the Epic Games Store.
 
+A simple [sample application](https://github.com/Bearwaves/eos4j-sample) showing
+basic functionality is available.
+
 ## Compatibility
 
 eos4j supports Java 8 and above, and has natives built for the following
