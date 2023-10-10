@@ -110,6 +110,16 @@ class EOSStatsNative {
         });
     */
 
+    static native int getStatsCount(long handle, long targetUserIdPtr); /*
+        EOS_ProductUserId user_id = reinterpret_cast<EOS_ProductUserId>(targetUserIdPtr);
+
+        EOS_Stats_GetStatCountOptions options;
+        options.ApiVersion = EOS_STATS_GETSTATSCOUNT_API_LATEST;
+        options.TargetUserId = user_id;
+
+        return EOS_Stats_GetStatsCount(reinterpret_cast<EOS_HStats>(handle), &options);
+    */
+
     static native EOSStats.Stat copyStatByName(long handle, EOSStats.CopyStatByNameOptions options) throws EOSException; /*
         auto stat_name = EOS4J::javaStringFromObjectField(env, options, "name");
         jobject target_user_id_obj = EOS4J::javaObjectFromObjectField(env, options, "targetUserId", "Lcom/bearwaves/eos4j/EOS$ProductUserId;");
@@ -123,6 +133,35 @@ class EOSStatsNative {
 
         EOS_Stats_Stat* out_stat;
         auto copy_result = EOS_Stats_CopyStatByName(reinterpret_cast<EOS_HStats>(handle), &copy_options, &out_stat);
+        if (copy_result != EOS_EResult::EOS_Success) {
+            EOS4J::throwEOSException(env, static_cast<int>(copy_result));
+            return nullptr;
+        }
+
+        jclass result_cls = env->FindClass("com/bearwaves/eos4j/EOSStats$Stat");
+        jmethodID result_ctor = env->GetMethodID(result_cls, "<init>", "(JLjava/lang/String;Ljava/util/Date;Ljava/util/Date;I)V");
+
+        jclass date_cls = env->FindClass("java/util/Date");
+        jmethodID date_ctor = env->GetMethodID(date_cls, "<init>", "(J)V");
+        jobject start_time = out_stat->StartTime == EOS_STATS_TIME_UNDEFINED ? nullptr : env->NewObject(date_cls, date_ctor, out_stat->StartTime);
+        jobject end_time = out_stat->EndTime == EOS_STATS_TIME_UNDEFINED ? nullptr : env->NewObject(date_cls, date_ctor, out_stat->EndTime);
+
+        return env->NewObject(result_cls, result_ctor, (long long) out_stat, env->NewStringUTF(out_stat->Name), start_time, end_time, out_stat->Value);
+    */
+
+    static native EOSStats.Stat copyStatByIndex(long handle, EOSStats.CopyStatByIndexOptions options) throws EOSException; /*
+        auto stat_index = EOS4J::javaIntFromObjectField(env, options, "statIndex");
+        jobject target_user_id_obj = EOS4J::javaObjectFromObjectField(env, options, "targetUserId", "Lcom/bearwaves/eos4j/EOS$ProductUserId;");
+        auto target_user_id = EOS4J::javaLongFromObjectField(env, target_user_id_obj, "ptr");
+
+        EOS_Stats_CopyStatByIndexOptions copy_options;
+        memset(&copy_options, 0, sizeof(copy_options));
+        copy_options.ApiVersion = EOS_STATS_COPYSTATBYINDEX_API_LATEST;
+        copy_options.TargetUserId = reinterpret_cast<EOS_ProductUserId>(target_user_id);
+        copy_options.StatIndex = static_cast<int>(stat_index);
+
+        EOS_Stats_Stat* out_stat;
+        auto copy_result = EOS_Stats_CopyStatByIndex(reinterpret_cast<EOS_HStats>(handle), &copy_options, &out_stat);
         if (copy_result != EOS_EResult::EOS_Success) {
             EOS4J::throwEOSException(env, static_cast<int>(copy_result));
             return nullptr;

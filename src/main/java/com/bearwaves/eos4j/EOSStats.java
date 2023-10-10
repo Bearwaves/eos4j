@@ -18,8 +18,16 @@ public class EOSStats {
         EOSStatsNative.queryStats(handle, options, callback);
     }
 
+    public int getStatsCount(EOS.ProductUserId targetUserId) {
+        return EOSStatsNative.getStatsCount(handle, targetUserId.ptr);
+    }
+
     public Stat copyStatByName(CopyStatByNameOptions options) throws EOSException {
         return EOSStatsNative.copyStatByName(handle, options);
+    }
+
+    public Stat copyStatByIndex(CopyStatByIndexOptions options) throws EOSException {
+        return EOSStatsNative.copyStatByIndex(handle, options);
     }
 
     public static class IngestStatOptions {
@@ -86,6 +94,16 @@ public class EOSStats {
         public CopyStatByNameOptions(EOS.ProductUserId targetUserId, String name) {
             this.targetUserId = targetUserId;
             this.name = name;
+        }
+    }
+
+    public static class CopyStatByIndexOptions {
+        public final EOS.ProductUserId targetUserId;
+        public final int statIndex;
+
+        public CopyStatByIndexOptions(EOS.ProductUserId targetUserId, int statIndex) {
+            this.targetUserId = targetUserId;
+            this.statIndex = statIndex;
         }
     }
 
