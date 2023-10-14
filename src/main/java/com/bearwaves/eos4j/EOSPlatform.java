@@ -51,6 +51,14 @@ public class EOSPlatform {
         return new EOSAchievements(achievementsHandle);
     }
 
+    public EOSLeaderboards getLeaderboardsHandle() throws EOSException {
+        long leaderboardsHandle = EOSPlatformNative.getLeaderboardsHandle(handle);
+        if (leaderboardsHandle == 0) {
+            throw new EOSException("Failed to get leaderboards handle");
+        }
+        return new EOSLeaderboards(leaderboardsHandle);
+    }
+
     public static class Options {
         public final String productId;
         public final String sandboxId;

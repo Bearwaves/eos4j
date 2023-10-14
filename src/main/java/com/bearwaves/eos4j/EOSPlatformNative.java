@@ -51,4 +51,8 @@ class EOSPlatformNative {
     static native long getAchievementsHandle(long handle); /*
         return (long long) EOS_Platform_GetAchievementsInterface(reinterpret_cast<EOS_HPlatform>(handle));
     */
+
+    static native long getLeaderboardsHandle(long handle); /*
+        return (long long) EOS_Platform_GetLeaderboardsInterface(reinterpret_cast<EOS_HPlatform>(handle));
+    */
 }
