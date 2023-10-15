@@ -86,6 +86,39 @@ public class EOSLeaderboardsNative {
         return env->NewObject(result_cls, result_ctor, (long long) out_definition, env->NewStringUTF(out_definition->LeaderboardId), env->NewStringUTF(out_definition->StatName), aggregation, start_time, end_time);
      */
 
+    static native EOSLeaderboards.LeaderboardDefinition copyLeaderboardDefinitionByLeaderboardId(
+            long handle,
+            EOSLeaderboards.CopyLeaderboardDefinitionByLeaderboardIdOptions options
+    ); /*
+        auto leaderboard_id = EOS4J::javaStringFromObjectField(env, options, "id");
+
+        EOS_Leaderboards_CopyLeaderboardDefinitionByLeaderboardIdOptions copy_options;
+        memset(&copy_options, 0, sizeof(copy_options));
+        copy_options.ApiVersion = EOS_LEADERBOARDS_COPYLEADERBOARDDEFINITIONBYLEADERBOARDID_API_LATEST;
+        copy_options.LeaderboardId = leaderboard_id->c_str();
+
+        EOS_Leaderboards_Definition* out_definition;
+        auto copy_result = EOS_Leaderboards_CopyLeaderboardDefinitionByLeaderboardId(reinterpret_cast<EOS_HLeaderboards>(handle), &copy_options, &out_definition);
+        if (copy_result != EOS_EResult::EOS_Success) {
+            EOS4J::throwEOSException(env, static_cast<int>(copy_result));
+            return nullptr;
+        }
+
+        jclass result_cls = env->FindClass("com/bearwaves/eos4j/EOSLeaderboards$LeaderboardDefinition");
+        jmethodID result_ctor = env->GetMethodID(result_cls, "<init>", "(JLjava/lang/String;Ljava/lang/String;Lcom/bearwaves/eos4j/EOSLeaderboards$Aggregation;Ljava/util/Date;Ljava/util/Date;)V");
+
+        jclass date_cls = env->FindClass("java/util/Date");
+        jmethodID date_ctor = env->GetMethodID(date_cls, "<init>", "(J)V");
+        jobject start_time = out_definition->StartTime == EOS_LEADERBOARDS_TIME_UNDEFINED ? nullptr : env->NewObject(date_cls, date_ctor, out_definition->StartTime);
+        jobject end_time = out_definition->EndTime == EOS_LEADERBOARDS_TIME_UNDEFINED ? nullptr : env->NewObject(date_cls, date_ctor, out_definition->EndTime);
+
+        auto aggregation_cls = env->FindClass("com/bearwaves/eos4j/EOSLeaderboards$Aggregation");
+        jmethodID aggregation_func = env->GetStaticMethodID(aggregation_cls, "fromInt", "(I)Lcom/bearwaves/eos4j/EOSLeaderboards$Aggregation;");
+        jobject aggregation = env->CallStaticObjectMethod(aggregation_cls, aggregation_func, out_definition->Aggregation);
+
+        return env->NewObject(result_cls, result_ctor, (long long) out_definition, env->NewStringUTF(out_definition->LeaderboardId), env->NewStringUTF(out_definition->StatName), aggregation, start_time, end_time);
+     */
+
     static native void releaseLeaderboardDefinition(long handle); /*
         EOS_Leaderboards_Definition_Release(reinterpret_cast<EOS_Leaderboards_Definition*>(handle));
     */

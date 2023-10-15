@@ -22,6 +22,10 @@ public class EOSLeaderboards {
         return EOSLeaderboardsNative.copyLeaderboardDefinitionByIndex(handle, options);
     }
 
+    public LeaderboardDefinition copyLeaderboardDefinitionByLeaderboardId(CopyLeaderboardDefinitionByLeaderboardIdOptions options) throws EOSException {
+        return EOSLeaderboardsNative.copyLeaderboardDefinitionByLeaderboardId(handle, options);
+    }
+
     public static class QueryLeaderboardDefinitionsOptions {
         public final EOS.ProductUserId localUserId;
         public final Date startTime;
@@ -47,6 +51,14 @@ public class EOSLeaderboards {
 
         public CopyLeaderboardDefinitionByIndexOptions(int index) {
             this.index = index;
+        }
+    }
+
+    public static class CopyLeaderboardDefinitionByLeaderboardIdOptions {
+        String id;
+
+        public CopyLeaderboardDefinitionByLeaderboardIdOptions(String id) {
+            this.id = id;
         }
     }
 
