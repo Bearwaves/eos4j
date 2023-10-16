@@ -68,6 +68,10 @@ public class EOS {
         ProductUserId(long ptr) {
             super(ptr);
         }
+
+        public String stringValue() throws EOSException {
+            return EOSNative.productUserIdToString(this);
+        }
     }
 
     public static class ContinuanceToken extends EOSHandle {

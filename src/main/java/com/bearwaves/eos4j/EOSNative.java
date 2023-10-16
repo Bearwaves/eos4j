@@ -4,6 +4,7 @@ package com.bearwaves.eos4j;
 /*JNI
 #include <eos_sdk.h>
 #include <cstring>
+#include <vector>
 #include "jni_utils.h"
 */
 class EOSNative {
@@ -24,6 +25,26 @@ class EOSNative {
 
     static native int shutdown(); /*
         return static_cast<int>(EOS_Shutdown());
+    */
+
+    static native String productUserIdToString(EOS.ProductUserId productUserId) throws EOSException; /*
+        int buffer_len = EOS_PRODUCTUSERID_MAX_LENGTH + 1;
+        std::vector<char> out_buffer;
+        out_buffer.reserve(buffer_len);
+        auto user_id_ptr = EOS4J::javaLongFromObjectField(env, productUserId, "ptr");
+
+        auto result = EOS_ProductUserId_ToString(
+            reinterpret_cast<EOS_ProductUserId>(user_id_ptr),
+            out_buffer.data(),
+            &buffer_len
+        );
+
+        if (result != EOS_EResult::EOS_Success) {
+            EOS4J::throwEOSException(env, static_cast<int>(result));
+            return nullptr;
+        }
+
+        return env->NewStringUTF(out_buffer.data());
     */
 
 }
