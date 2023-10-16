@@ -26,6 +26,18 @@ public class EOSLeaderboards {
         return EOSLeaderboardsNative.copyLeaderboardDefinitionByLeaderboardId(handle, options);
     }
 
+    public void queryLeaderboardRanks(QueryLeaderboardRanksOptions options, OnQueryLeaderboardRanksCompleteCallback callback) {
+        EOSLeaderboardsNative.queryLeaderboardRanks(handle, options, callback);
+    }
+
+    public int getLeaderboardRecordCount() {
+        return EOSLeaderboardsNative.getLeaderboardRecordCount(handle);
+    }
+
+    public LeaderboardRecord copyLeaderboardRecordByIndex(CopyLeaderboardRecordByIndexOptions options) throws EOSException {
+        return EOSLeaderboardsNative.copyLeaderboardRecordByIndex(handle, options);
+    }
+
     public static class QueryLeaderboardDefinitionsOptions {
         public final EOS.ProductUserId localUserId;
         public final Date startTime;
@@ -83,8 +95,57 @@ public class EOSLeaderboards {
         }
     }
 
+    public static class QueryLeaderboardRanksOptions {
+        public final String leaderboardId;
+        public final EOS.ProductUserId localUserId;
+
+        public QueryLeaderboardRanksOptions(String leaderboardId, EOS.ProductUserId localUserId) {
+            this.leaderboardId = leaderboardId;
+            this.localUserId = localUserId;
+        }
+    }
+
+    public static class OnQueryLeaderboardRanksCompleteCallbackInfo {
+        public final int resultCode;
+
+        public OnQueryLeaderboardRanksCompleteCallbackInfo(int resultCode) {
+            this.resultCode = resultCode;
+        }
+    }
+
+    public static class LeaderboardRecord extends EOSHandle {
+        public final EOS.ProductUserId userId;
+        public final int rank;
+        public final int score;
+        public final String userDisplayName;
+
+        public LeaderboardRecord(long ptr, EOS.ProductUserId userId, int rank, int score, String userDisplayName) {
+            super(ptr);
+            this.userId = userId;
+            this.rank = rank;
+            this.score = score;
+            this.userDisplayName = userDisplayName;
+        }
+
+        public void release() {
+            EOSLeaderboardsNative.releaseLeaderboardRecord(ptr);
+        }
+    }
+
+    public static class CopyLeaderboardRecordByIndexOptions {
+        int index;
+
+        public CopyLeaderboardRecordByIndexOptions(int index) {
+            this.index = index;
+        }
+    }
+
     public interface OnQueryLeaderboardDefinitionsCompleteCallback {
         void run(OnQueryLeaderboardDefinitionsCompleteCallbackInfo data);
+    }
+
+    public interface OnQueryLeaderboardRanksCompleteCallback {
+        void run(OnQueryLeaderboardRanksCompleteCallbackInfo data);
     }
 
     public enum Aggregation {

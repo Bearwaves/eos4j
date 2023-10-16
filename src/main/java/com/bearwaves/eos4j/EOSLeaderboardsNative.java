@@ -122,4 +122,73 @@ public class EOSLeaderboardsNative {
     static native void releaseLeaderboardDefinition(long handle); /*
         EOS_Leaderboards_Definition_Release(reinterpret_cast<EOS_Leaderboards_Definition*>(handle));
     */
+
+    static native void queryLeaderboardRanks(
+            long handle,
+            EOSLeaderboards.QueryLeaderboardRanksOptions options,
+            EOSLeaderboards.OnQueryLeaderboardRanksCompleteCallback callback
+    ); /*
+        jobject local_user_id_obj = EOS4J::javaObjectFromObjectField(env, options, "localUserId", "Lcom/bearwaves/eos4j/EOS$ProductUserId;");
+        auto local_user_id = EOS4J::javaLongFromObjectField(env, local_user_id_obj, "ptr");
+        auto leaderboard_id = EOS4J::javaStringFromObjectField(env, options, "leaderboardId");
+
+        EOS_Leaderboards_QueryLeaderboardRanksOptions query_options;
+        memset(&query_options, 0, sizeof(query_options));
+        query_options.ApiVersion = EOS_LEADERBOARDS_QUERYLEADERBOARDRANKS_API_LATEST;
+        query_options.LocalUserId = reinterpret_cast<EOS_ProductUserId>(local_user_id);
+        query_options.LeaderboardId = leaderboard_id->c_str();
+
+        auto callback_adapter = std::make_unique<EOS4J::CallbackAdapter>(env, callback);
+        EOS_Leaderboards_QueryLeaderboardRanks(reinterpret_cast<EOS_HLeaderboards>(handle), &query_options, callback_adapter.release(), [](const EOS_Leaderboards_OnQueryLeaderboardRanksCompleteCallbackInfo* data) -> void {
+            std::unique_ptr<EOS4J::CallbackAdapter> callback_adapter{reinterpret_cast<EOS4J::CallbackAdapter*>(data->ClientData)};
+            callback_adapter->attach([&](JNIEnv* env, jobject callback) -> void {
+                jclass callback_info_class = env->FindClass("com/bearwaves/eos4j/EOSLeaderboards$OnQueryLeaderboardRanksCompleteCallbackInfo");
+                jmethodID callback_info_ctor = env->GetMethodID(callback_info_class, "<init>", "(I)V");
+                auto callback_info = env->NewObject(callback_info_class, callback_info_ctor, static_cast<int>(data->ResultCode));
+
+                jclass cls = env->GetObjectClass(callback);
+                jmethodID mid = env->GetMethodID(cls, "run", "(Lcom/bearwaves/eos4j/EOSLeaderboards$OnQueryLeaderboardRanksCompleteCallbackInfo;)V");
+                env->CallVoidMethod(callback, mid, callback_info);
+            });
+        });
+    */
+
+    static native int getLeaderboardRecordCount(long handle); /*
+        EOS_Leaderboards_GetLeaderboardRecordCountOptions options;
+        options.ApiVersion = EOS_LEADERBOARDS_GETLEADERBOARDRECORDCOUNT_API_LATEST;
+
+        return EOS_Leaderboards_GetLeaderboardRecordCount(reinterpret_cast<EOS_HLeaderboards>(handle), &options);
+    */
+
+    static native EOSLeaderboards.LeaderboardRecord copyLeaderboardRecordByIndex(
+            long handle,
+            EOSLeaderboards.CopyLeaderboardRecordByIndexOptions options
+    ) throws EOSException; /*
+        auto index = EOS4J::javaIntFromObjectField(env, options, "index");
+
+        EOS_Leaderboards_CopyLeaderboardRecordByIndexOptions copy_options;
+        memset(&copy_options, 0, sizeof(copy_options));
+        copy_options.ApiVersion = EOS_LEADERBOARDS_COPYLEADERBOARDRECORDBYINDEX_API_LATEST;
+        copy_options.LeaderboardRecordIndex = static_cast<int>(index);
+
+        EOS_Leaderboards_LeaderboardRecord* out_record;
+        auto copy_result = EOS_Leaderboards_CopyLeaderboardRecordByIndex(reinterpret_cast<EOS_HLeaderboards>(handle), &copy_options, &out_record);
+        if (copy_result != EOS_EResult::EOS_Success) {
+            EOS4J::throwEOSException(env, static_cast<int>(copy_result));
+            return nullptr;
+        }
+
+        jclass result_cls = env->FindClass("com/bearwaves/eos4j/EOSLeaderboards$LeaderboardRecord");
+        jmethodID result_ctor = env->GetMethodID(result_cls, "<init>", "(JLcom/bearwaves/eos4j/EOS$ProductUserId;IILjava/lang/String;)V");
+
+        jclass puid_cls = env->FindClass("com/bearwaves/eos4j/EOS$ProductUserId");
+        jmethodID puid_ctor = env->GetMethodID(puid_cls, "<init>", "(J)V");
+        auto user_id = env->NewObject(puid_cls, puid_ctor, out_record->UserId);
+
+        return env->NewObject(result_cls, result_ctor, (long long) out_record, user_id, out_record->Rank, out_record->Score, env->NewStringUTF(out_record->UserDisplayName));
+    */
+
+    static native void releaseLeaderboardRecord(long handle); /*
+        EOS_Leaderboards_LeaderboardRecord_Release(reinterpret_cast<EOS_Leaderboards_LeaderboardRecord*>(handle));
+    */
 }
