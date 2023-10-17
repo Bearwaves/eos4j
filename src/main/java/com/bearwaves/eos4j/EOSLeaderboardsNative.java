@@ -188,6 +188,35 @@ public class EOSLeaderboardsNative {
         return env->NewObject(result_cls, result_ctor, (long long) out_record, user_id, out_record->Rank, out_record->Score, env->NewStringUTF(out_record->UserDisplayName));
     */
 
+    static native EOSLeaderboards.LeaderboardRecord copyLeaderboardRecordByUserId(
+            long handle,
+            EOSLeaderboards.CopyLeaderboardRecordByUserIdOptions options
+    ) throws EOSException; /*
+        jobject user_id_obj = EOS4J::javaObjectFromObjectField(env, options, "userId", "Lcom/bearwaves/eos4j/EOS$ProductUserId;");
+        auto user_id = EOS4J::javaLongFromObjectField(env, user_id_obj, "ptr");
+
+        EOS_Leaderboards_CopyLeaderboardRecordByUserIdOptions copy_options;
+        memset(&copy_options, 0, sizeof(copy_options));
+        copy_options.ApiVersion = EOS_LEADERBOARDS_COPYLEADERBOARDRECORDBYUSERID_API_LATEST;
+        copy_options.UserId = reinterpret_cast<EOS_ProductUserId>(user_id);
+
+        EOS_Leaderboards_LeaderboardRecord* out_record;
+        auto copy_result = EOS_Leaderboards_CopyLeaderboardRecordByUserId(reinterpret_cast<EOS_HLeaderboards>(handle), &copy_options, &out_record);
+        if (copy_result != EOS_EResult::EOS_Success) {
+            EOS4J::throwEOSException(env, static_cast<int>(copy_result));
+            return nullptr;
+        }
+
+        jclass result_cls = env->FindClass("com/bearwaves/eos4j/EOSLeaderboards$LeaderboardRecord");
+        jmethodID result_ctor = env->GetMethodID(result_cls, "<init>", "(JLcom/bearwaves/eos4j/EOS$ProductUserId;IILjava/lang/String;)V");
+
+        jclass puid_cls = env->FindClass("com/bearwaves/eos4j/EOS$ProductUserId");
+        jmethodID puid_ctor = env->GetMethodID(puid_cls, "<init>", "(J)V");
+        auto record_user_id = env->NewObject(puid_cls, puid_ctor, out_record->UserId);
+
+        return env->NewObject(result_cls, result_ctor, (long long) out_record, record_user_id, out_record->Rank, out_record->Score, env->NewStringUTF(out_record->UserDisplayName));
+    */
+
     static native void releaseLeaderboardRecord(long handle); /*
         EOS_Leaderboards_LeaderboardRecord_Release(reinterpret_cast<EOS_Leaderboards_LeaderboardRecord*>(handle));
     */
