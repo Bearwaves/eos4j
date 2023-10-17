@@ -42,7 +42,7 @@ dependency management tool to fetch it.
 ```groovy
 // Gradle
 dependencies {
-    implementation "com.bearwaves:eos4j:1.0.0"
+    implementation "com.bearwaves:eos4j:1.1.0"
 }
 ```
 
@@ -53,7 +53,7 @@ Make sure you have the OSS Snapshots repository declared.
 // Gradle
 maven { url "https://s01.oss.sonatype.org/content/repositories/snapshots/" }
 dependencies {
-    implementation "com.bearwaves:eos4j:1.1.0-SNAPSHOT"
+    implementation "com.bearwaves:eos4j:1.2.0-SNAPSHOT"
 }
 ```
 
