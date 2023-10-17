@@ -220,4 +220,152 @@ public class EOSLeaderboardsNative {
     static native void releaseLeaderboardRecord(long handle); /*
         EOS_Leaderboards_LeaderboardRecord_Release(reinterpret_cast<EOS_Leaderboards_LeaderboardRecord*>(handle));
     */
+
+    static native void queryLeaderboardUserScores(
+            long handle,
+            EOSLeaderboards.QueryLeaderboardUserScoresOptions options,
+            EOSLeaderboards.OnQueryLeaderboardUserScoresCompleteCallback callback
+    ); /*
+        jobject local_user_id_obj = EOS4J::javaObjectFromObjectField(env, options, "localUserId", "Lcom/bearwaves/eos4j/EOS$ProductUserId;");
+        auto local_user_id = EOS4J::javaLongFromObjectField(env, local_user_id_obj, "ptr");
+
+        jobject start_date_obj = EOS4J::javaObjectFromObjectField(env, options, "startTime", "Ljava/util/Date;");
+        jobject end_date_obj = EOS4J::javaObjectFromObjectField(env, options, "endTime", "Ljava/util/Date;");
+        jclass date_class = env->FindClass("java/util/Date");
+        jmethodID timestamp_mid =  env->GetMethodID(date_class, "getTime", "()J");
+        int64_t start_time = start_date_obj ? env->CallLongMethod(start_date_obj, timestamp_mid) : EOS_LEADERBOARDS_TIME_UNDEFINED;
+        int64_t end_time = end_date_obj ? env->CallLongMethod(end_date_obj, timestamp_mid) : EOS_LEADERBOARDS_TIME_UNDEFINED;
+
+        // User IDs
+        std::vector<EOS_ProductUserId> user_ids;
+        jobjectArray user_ids_array = (jobjectArray) EOS4J::javaObjectFromObjectField(env, options, "userIds", "[Lcom/bearwaves/eos4j/EOS$ProductUserId;");
+        if (user_ids_array != nullptr) {
+            int user_ids_count = env->GetArrayLength(user_ids_array);
+            for (int i = 0; i < user_ids_count; i++) {
+                jobject user_id_obj = env->GetObjectArrayElement(user_ids_array, i);
+                auto user_id = EOS4J::javaLongFromObjectField(env, user_id_obj, "ptr");
+                user_ids.push_back(reinterpret_cast<EOS_ProductUserId>(user_id));
+            }
+        }
+
+        // Stat infos
+        jobjectArray stat_info_array = (jobjectArray) EOS4J::javaObjectFromObjectField(env, options, "statInfo", "[Lcom/bearwaves/eos4j/EOSLeaderboards$UserScoresQueryStatInfo;");
+        std::vector<EOS_Leaderboards_UserScoresQueryStatInfo> stat_infos;
+        // Stop these being disposed prematurely.
+        std::vector<std::unique_ptr<EOS4J::JavaString>> stat_names;
+        if (stat_info_array != nullptr) {
+            int stat_info_count = env->GetArrayLength(stat_info_array);
+            for (int i = 0; i < stat_info_count; i++) {
+                jobject stat_info_obj = env->GetObjectArrayElement(stat_info_array, i);
+                EOS_Leaderboards_UserScoresQueryStatInfo stat_info;
+                memset(&stat_info, 0, sizeof(stat_info));
+                stat_info.ApiVersion = EOS_LEADERBOARDS_USERSCORESQUERYSTATINFO_API_LATEST;
+                auto stat_name = EOS4J::javaStringFromObjectField(env, stat_info_obj, "statName");
+                stat_names.push_back(std::move(stat_name));
+                stat_info.StatName = stat_names.back()->c_str();
+                auto aggregation = EOS4J::javaEnumValueFromObjectField(env, stat_info_obj, "aggregation", "Lcom/bearwaves/eos4j/EOSLeaderboards$Aggregation;");
+                stat_info.Aggregation = static_cast<EOS_ELeaderboardAggregation>(aggregation);
+                stat_infos.push_back(std::move(stat_info));
+            }
+        }
+
+        EOS_Leaderboards_QueryLeaderboardUserScoresOptions query_options;
+        memset(&query_options, 0, sizeof(query_options));
+        query_options.ApiVersion = EOS_LEADERBOARDS_QUERYLEADERBOARDUSERSCORES_API_LATEST;
+        query_options.LocalUserId = reinterpret_cast<EOS_ProductUserId>(local_user_id);
+        query_options.StartTime = start_time;
+        query_options.EndTime = end_time;
+        query_options.UserIds = user_ids.data();
+        query_options.UserIdsCount = user_ids.size();
+        query_options.StatInfo = stat_infos.data();
+        query_options.StatInfoCount = stat_infos.size();
+
+        auto callback_adapter = std::make_unique<EOS4J::CallbackAdapter>(env, callback);
+        EOS_Leaderboards_QueryLeaderboardUserScores(reinterpret_cast<EOS_HLeaderboards>(handle), &query_options, callback_adapter.release(), [](const EOS_Leaderboards_OnQueryLeaderboardUserScoresCompleteCallbackInfo* data) -> void {
+            std::unique_ptr<EOS4J::CallbackAdapter> callback_adapter{reinterpret_cast<EOS4J::CallbackAdapter*>(data->ClientData)};
+            callback_adapter->attach([&](JNIEnv* env, jobject callback) -> void {
+                jclass callback_info_class = env->FindClass("com/bearwaves/eos4j/EOSLeaderboards$OnQueryLeaderboardUserScoresCompleteCallbackInfo");
+                jmethodID callback_info_ctor = env->GetMethodID(callback_info_class, "<init>", "(I)V");
+                auto callback_info = env->NewObject(callback_info_class, callback_info_ctor, static_cast<int>(data->ResultCode));
+
+                jclass cls = env->GetObjectClass(callback);
+                jmethodID mid = env->GetMethodID(cls, "run", "(Lcom/bearwaves/eos4j/EOSLeaderboards$OnQueryLeaderboardUserScoresCompleteCallbackInfo;)V");
+                env->CallVoidMethod(callback, mid, callback_info);
+            });
+        });
+    */
+
+    static native int getLeaderboardUserScoreCount(long handle, EOSLeaderboards.GetLeaderboardUserScoreCountOptions options); /*
+        EOS_Leaderboards_GetLeaderboardUserScoreCountOptions count_options;
+        count_options.ApiVersion = EOS_LEADERBOARDS_GETLEADERBOARDUSERSCORECOUNT_API_LATEST;
+        auto stat_name = EOS4J::javaStringFromObjectField(env, options, "statName");
+        count_options.StatName = stat_name->c_str();
+
+        return EOS_Leaderboards_GetLeaderboardUserScoreCount(reinterpret_cast<EOS_HLeaderboards>(handle), &count_options);
+    */
+
+    static native EOSLeaderboards.LeaderboardUserScore copyLeaderboardUserScoreByIndex(
+            long handle,
+            EOSLeaderboards.CopyLeaderboardUserScoreByIndexOptions options
+    ) throws EOSException; /*
+        auto index = EOS4J::javaIntFromObjectField(env, options, "index");
+
+        EOS_Leaderboards_CopyLeaderboardUserScoreByIndexOptions copy_options;
+        memset(&copy_options, 0, sizeof(copy_options));
+        copy_options.ApiVersion = EOS_LEADERBOARDS_COPYLEADERBOARDUSERSCOREBYINDEX_API_LATEST;
+        copy_options.LeaderboardUserScoreIndex = static_cast<int>(index);
+        auto stat_name = EOS4J::javaStringFromObjectField(env, options, "statName");
+        copy_options.StatName = stat_name->c_str();
+
+        EOS_Leaderboards_LeaderboardUserScore* out_score;
+        auto copy_result = EOS_Leaderboards_CopyLeaderboardUserScoreByIndex(reinterpret_cast<EOS_HLeaderboards>(handle), &copy_options, &out_score);
+        if (copy_result != EOS_EResult::EOS_Success) {
+            EOS4J::throwEOSException(env, static_cast<int>(copy_result));
+            return nullptr;
+        }
+
+        jclass result_cls = env->FindClass("com/bearwaves/eos4j/EOSLeaderboards$LeaderboardUserScore");
+        jmethodID result_ctor = env->GetMethodID(result_cls, "<init>", "(JLcom/bearwaves/eos4j/EOS$ProductUserId;I)V");
+
+        jclass puid_cls = env->FindClass("com/bearwaves/eos4j/EOS$ProductUserId");
+        jmethodID puid_ctor = env->GetMethodID(puid_cls, "<init>", "(J)V");
+        auto user_id = env->NewObject(puid_cls, puid_ctor, out_score->UserId);
+
+        return env->NewObject(result_cls, result_ctor, (long long) out_score, user_id, out_score->Score);
+    */
+
+    static native EOSLeaderboards.LeaderboardUserScore copyLeaderboardUserScoreByUserId(
+            long handle,
+            EOSLeaderboards.CopyLeaderboardUserScoreByUserIdOptions options
+    ) throws EOSException; /*
+        jobject user_id_obj = EOS4J::javaObjectFromObjectField(env, options, "userId", "Lcom/bearwaves/eos4j/EOS$ProductUserId;");
+        auto user_id = EOS4J::javaLongFromObjectField(env, user_id_obj, "ptr");
+
+        EOS_Leaderboards_CopyLeaderboardUserScoreByUserIdOptions copy_options;
+        memset(&copy_options, 0, sizeof(copy_options));
+        copy_options.ApiVersion = EOS_LEADERBOARDS_COPYLEADERBOARDUSERSCOREBYINDEX_API_LATEST;
+        copy_options.UserId = reinterpret_cast<EOS_ProductUserId>(user_id);
+        auto stat_name = EOS4J::javaStringFromObjectField(env, options, "statName");
+        copy_options.StatName = stat_name->c_str();
+
+        EOS_Leaderboards_LeaderboardUserScore* out_score;
+        auto copy_result = EOS_Leaderboards_CopyLeaderboardUserScoreByUserId(reinterpret_cast<EOS_HLeaderboards>(handle), &copy_options, &out_score);
+        if (copy_result != EOS_EResult::EOS_Success) {
+            EOS4J::throwEOSException(env, static_cast<int>(copy_result));
+            return nullptr;
+        }
+
+        jclass result_cls = env->FindClass("com/bearwaves/eos4j/EOSLeaderboards$LeaderboardUserScore");
+        jmethodID result_ctor = env->GetMethodID(result_cls, "<init>", "(JLcom/bearwaves/eos4j/EOS$ProductUserId;I)V");
+
+        jclass puid_cls = env->FindClass("com/bearwaves/eos4j/EOS$ProductUserId");
+        jmethodID puid_ctor = env->GetMethodID(puid_cls, "<init>", "(J)V");
+        auto out_user_id = env->NewObject(puid_cls, puid_ctor, out_score->UserId);
+
+        return env->NewObject(result_cls, result_ctor, (long long) out_score, out_user_id, out_score->Score);
+    */
+
+    static native void releaseLeaderboardUserScore(long handle); /*
+        EOS_Leaderboards_LeaderboardUserScore_Release(reinterpret_cast<EOS_Leaderboards_LeaderboardUserScore*>(handle));
+    */
 }

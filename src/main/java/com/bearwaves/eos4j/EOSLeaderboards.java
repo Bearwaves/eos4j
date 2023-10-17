@@ -42,6 +42,22 @@ public class EOSLeaderboards {
         return EOSLeaderboardsNative.copyLeaderboardRecordByUserId(handle, options);
     }
 
+    public void queryLeaderboardUserScores(QueryLeaderboardUserScoresOptions options, OnQueryLeaderboardUserScoresCompleteCallback callback) {
+        EOSLeaderboardsNative.queryLeaderboardUserScores(handle, options, callback);
+    }
+
+    public int getLeaderboardUserScoreCount(GetLeaderboardUserScoreCountOptions options) {
+        return EOSLeaderboardsNative.getLeaderboardUserScoreCount(handle, options);
+    }
+
+    public LeaderboardUserScore copyLeaderboardUserScoreByIndex(CopyLeaderboardUserScoreByIndexOptions options) throws EOSException {
+        return EOSLeaderboardsNative.copyLeaderboardUserScoreByIndex(handle, options);
+    }
+
+    public LeaderboardUserScore copyLeaderboardUserScoreByUserId(CopyLeaderboardUserScoreByUserIdOptions options) throws EOSException {
+        return EOSLeaderboardsNative.copyLeaderboardUserScoreByUserId(handle, options);
+    }
+
     public static class QueryLeaderboardDefinitionsOptions {
         public final EOS.ProductUserId localUserId;
         public final Date startTime;
@@ -152,12 +168,93 @@ public class EOSLeaderboards {
         }
     }
 
+    public static class QueryLeaderboardUserScoresOptions {
+        public final EOS.ProductUserId[] userIds;
+        public final UserScoresQueryStatInfo[] statInfo;
+        public final Date startTime;
+        public final Date endTime;
+        public final EOS.ProductUserId localUserId;
+
+        public QueryLeaderboardUserScoresOptions(EOS.ProductUserId[] userIds, UserScoresQueryStatInfo[] statInfo, Date startTime, Date endTime, EOS.ProductUserId localUserId) {
+            this.userIds = userIds;
+            this.statInfo = statInfo;
+            this.startTime = startTime;
+            this.endTime = endTime;
+            this.localUserId = localUserId;
+        }
+    }
+
+    public static class UserScoresQueryStatInfo {
+        public final String statName;
+        public final Aggregation aggregation;
+
+        public UserScoresQueryStatInfo(String statName, Aggregation aggregation) {
+            this.statName = statName;
+            this.aggregation = aggregation;
+        }
+    }
+
+    public static class OnQueryLeaderboardUserScoresCompleteCallbackInfo {
+        public final int resultCode;
+
+        public OnQueryLeaderboardUserScoresCompleteCallbackInfo(int resultCode) {
+            this.resultCode = resultCode;
+        }
+    }
+
+    public static class LeaderboardUserScore extends EOSHandle {
+        public final EOS.ProductUserId userId;
+        public final int score;
+
+        public LeaderboardUserScore(long ptr, EOS.ProductUserId userId, int score) {
+            super(ptr);
+            this.userId = userId;
+            this.score = score;
+        }
+
+        public void release() {
+            EOSLeaderboardsNative.releaseLeaderboardUserScore(ptr);
+        }
+    }
+
+    public static class GetLeaderboardUserScoreCountOptions {
+        public final String statName;
+
+        public GetLeaderboardUserScoreCountOptions(String statName) {
+            this.statName = statName;
+        }
+    }
+
+    public static class CopyLeaderboardUserScoreByIndexOptions {
+        public final int index;
+        public final String statName;
+
+        public CopyLeaderboardUserScoreByIndexOptions(int index, String statName) {
+            this.index = index;
+            this.statName = statName;
+        }
+    }
+
+    public static class CopyLeaderboardUserScoreByUserIdOptions {
+        public final EOS.ProductUserId userId;
+        public final String statName;
+
+        public CopyLeaderboardUserScoreByUserIdOptions(EOS.ProductUserId userId, String statName) {
+            this.userId = userId;
+            this.statName = statName;
+        }
+    }
+
     public interface OnQueryLeaderboardDefinitionsCompleteCallback {
         void run(OnQueryLeaderboardDefinitionsCompleteCallbackInfo data);
     }
 
     public interface OnQueryLeaderboardRanksCompleteCallback {
         void run(OnQueryLeaderboardRanksCompleteCallbackInfo data);
+    }
+
+    public interface OnQueryLeaderboardUserScoresCompleteCallback {
+        void run(OnQueryLeaderboardUserScoresCompleteCallbackInfo data);
     }
 
     public enum Aggregation {
