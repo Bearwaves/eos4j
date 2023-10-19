@@ -132,11 +132,19 @@ isn't quite there yet. At the time of writing, the following are implemented.
 
 - Ingest stat
 - Query stat
+- Get stat count
 - Copy stat by name
+- Copy stat by index
 
 ### Achievements interface
 
 - Unlock achievements
+
+### Leaderboards interface
+
+- Leaderboard definitions (query/count/copy)
+- Leaderboard ranks (query/count/copy)
+- Leaderboard user scores (query/count/copy)
 
 If there's something missing that you need, please do open an issue. PRs
 are very welcome.
