@@ -59,6 +59,14 @@ public class EOSPlatform {
         return new EOSLeaderboards(leaderboardsHandle);
     }
 
+    public EOSEcom getEcomHandle() throws EOSException {
+        long ecomHandle = EOSPlatformNative.getEcomHandle(handle);
+        if (ecomHandle == 0) {
+            throw new EOSException("Failed to get Ecom handle");
+        }
+        return new EOSEcom(ecomHandle);
+    }
+
     public static class Options {
         public final String productId;
         public final String sandboxId;
