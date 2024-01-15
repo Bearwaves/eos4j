@@ -55,4 +55,8 @@ class EOSPlatformNative {
     static native long getLeaderboardsHandle(long handle); /*
         return (long long) EOS_Platform_GetLeaderboardsInterface(reinterpret_cast<EOS_HPlatform>(handle));
     */
+
+    static native long getEcomHandle(long handle); /*
+        return (long long) EOS_Platform_GetEcomInterface(reinterpret_cast<EOS_HPlatform>(handle));
+    */
 }
