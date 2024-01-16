@@ -89,7 +89,7 @@ public class EOSLeaderboardsNative {
     static native EOSLeaderboards.LeaderboardDefinition copyLeaderboardDefinitionByLeaderboardId(
             long handle,
             EOSLeaderboards.CopyLeaderboardDefinitionByLeaderboardIdOptions options
-    ); /*
+    ) throws EOSException; /*
         auto leaderboard_id = EOS4J::javaStringFromObjectField(env, options, "id");
 
         EOS_Leaderboards_CopyLeaderboardDefinitionByLeaderboardIdOptions copy_options;
