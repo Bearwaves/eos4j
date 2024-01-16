@@ -40,11 +40,16 @@ class EOSEcomNative {
         });
     */
 
-    static native int getOfferCount(long handle); /*
-        EOS_Ecom_GetOfferCountOptions options;
-        options.ApiVersion = EOS_ECOM_GETOFFERCOUNT_API_LATEST;
+    static native int getOfferCount(long handle, EOSEcom.GetOfferCountOptions options); /*
+        jobject local_user_id_obj = EOS4J::javaObjectFromObjectField(env, options, "localUserId", "Lcom/bearwaves/eos4j/EOS$EpicAccountId;");
+        auto local_user_id = EOS4J::javaLongFromObjectField(env, local_user_id_obj, "ptr");
 
-        return EOS_Ecom_GetOfferCount(reinterpret_cast<EOS_HEcom>(handle), &options);
+        EOS_Ecom_GetOfferCountOptions count_options;
+        memset(&count_options, 0, sizeof(count_options));
+        count_options.ApiVersion = EOS_ECOM_GETOFFERCOUNT_API_LATEST;
+        count_options.LocalUserId = reinterpret_cast<EOS_EpicAccountId>(local_user_id);
+
+        return EOS_Ecom_GetOfferCount(reinterpret_cast<EOS_HEcom>(handle), &count_options);
     */
 }
 

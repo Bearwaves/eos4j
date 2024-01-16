@@ -12,8 +12,8 @@ public class EOSEcom {
         EOSEcomNative.queryOffers(handle, options, callback);
     }
 
-    public int getOfferCount() {
-        return EOSEcomNative.getOfferCount(handle);
+    public int getOfferCount(GetOfferCountOptions options) {
+        return EOSEcomNative.getOfferCount(handle, options);
     }
 
     public static class QueryOffersOptions {
@@ -23,6 +23,14 @@ public class EOSEcom {
         public QueryOffersOptions(EOS.EpicAccountId localUserId, String overrideCatalogNamespace) {
             this.localUserId = localUserId;
             this.overrideCatalogNamespace = overrideCatalogNamespace;
+        }
+    }
+
+    public static class GetOfferCountOptions {
+        public final EOS.EpicAccountId localUserId;
+
+        public GetOfferCountOptions(EOS.EpicAccountId localUserId) {
+            this.localUserId = localUserId;
         }
     }
 
