@@ -105,6 +105,59 @@ class EOSEcomNative {
         );
      */
 
+    static native EOSEcom.CatalogOffer copyOfferById(
+            long handle, EOSEcom.CopyOfferByIdOptions options
+    ) throws EOSException; /*
+        jobject local_user_id_obj = EOS4J::javaObjectFromObjectField(env, options, "localUserId", "Lcom/bearwaves/eos4j/EOS$EpicAccountId;");
+        auto local_user_id = EOS4J::javaLongFromObjectField(env, local_user_id_obj, "ptr");
+        auto offer_id = EOS4J::javaStringFromObjectField(env, options, "offerId");
+
+        EOS_Ecom_CopyOfferByIdOptions copy_options;
+        memset(&copy_options, 0, sizeof(copy_options));
+        copy_options.ApiVersion = EOS_ECOM_COPYOFFERBYID_API_LATEST;
+        copy_options.LocalUserId = reinterpret_cast<EOS_EpicAccountId>(local_user_id);
+        copy_options.OfferId = static_cast<EOS_Ecom_CatalogOfferId>(offer_id->c_str());
+
+        EOS_Ecom_CatalogOffer* out_offer;
+        auto copy_result = EOS_Ecom_CopyOfferById(reinterpret_cast<EOS_HEcom>(handle), &copy_options, &out_offer);
+        if (copy_result != EOS_EResult::EOS_Success) {
+            EOS4J::throwEOSException(env, static_cast<int>(copy_result));
+            return nullptr;
+        }
+
+        jclass result_cls = env->FindClass("com/bearwaves/eos4j/EOSEcom$CatalogOffer");
+        jmethodID result_ctor = env->GetMethodID(result_cls, "<init>", "(JILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;IILjava/util/Date;IZJJILjava/util/Date;Ljava/util/Date;)V");
+
+        jclass date_cls = env->FindClass("java/util/Date");
+        jmethodID date_ctor = env->GetMethodID(date_cls, "<init>", "(J)V");
+        jobject expiration = out_offer->ExpirationTimestamp == EOS_ECOM_CATALOGOFFER_EXPIRATIONTIMESTAMP_UNDEFINED ? nullptr : env->NewObject(date_cls, date_ctor, out_offer->ExpirationTimestamp);
+        jobject release_date = out_offer->ReleaseDateTimestamp == EOS_ECOM_CATALOGOFFER_RELEASEDATETIMESTAMP_UNDEFINED ? nullptr : env->NewObject(date_cls, date_ctor, out_offer->ReleaseDateTimestamp);
+        jobject effective_date = out_offer->EffectiveDateTimestamp == EOS_ECOM_CATALOGOFFER_EFFECTIVEDATETIMESTAMP_UNDEFINED ? nullptr : env->NewObject(date_cls, date_ctor, out_offer->EffectiveDateTimestamp);
+
+        return env->NewObject(
+            result_cls,
+            result_ctor,
+            (long long) out_offer,
+            out_offer->ServerIndex,
+            env->NewStringUTF(out_offer->CatalogNamespace),
+            env->NewStringUTF(out_offer->Id),
+            env->NewStringUTF(out_offer->TitleText),
+            env->NewStringUTF(out_offer->DescriptionText),
+            env->NewStringUTF(out_offer->LongDescriptionText),
+            env->NewStringUTF(out_offer->CurrencyCode),
+            out_offer->PriceResult,
+            out_offer->DiscountPercentage,
+            expiration,
+            out_offer->PurchaseLimit,
+            out_offer->bAvailableForPurchase,
+            out_offer->OriginalPrice64,
+            out_offer->CurrentPrice64,
+            out_offer->DecimalPoint,
+            release_date,
+            effective_date
+        );
+     */
+
     static native void releaseCatalogOffer(long handle); /*
         EOS_Ecom_CatalogOffer_Release(reinterpret_cast<EOS_Ecom_CatalogOffer*>(handle));
     */
