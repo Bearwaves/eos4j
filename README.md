@@ -146,6 +146,10 @@ isn't quite there yet. At the time of writing, the following are implemented.
 - Leaderboard ranks (query/count/copy)
 - Leaderboard user scores (query/count/copy)
 
+### Ecom interface
+
+- Catalog offers (query/count/copy)
+
 If there's something missing that you need, please do open an issue. PRs
 are very welcome.
 
