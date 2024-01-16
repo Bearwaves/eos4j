@@ -22,6 +22,10 @@ public class EOSEcom {
         return EOSEcomNative.copyOfferByIndex(handle, options);
     }
 
+    public CatalogOffer copyOfferById(CopyOfferByIdOptions options) throws EOSException {
+        return EOSEcomNative.copyOfferById(handle, options);
+    }
+
     public static class CatalogOffer extends EOSHandle {
         public final int serverIndex;
         public final String catalogNamespace;
@@ -109,6 +113,16 @@ public class EOSEcom {
         public CopyOfferByIndexOptions(EOS.EpicAccountId localUserId, int offerIndex) {
             this.localUserId = localUserId;
             this.offerIndex = offerIndex;
+        }
+    }
+
+    public static class CopyOfferByIdOptions {
+        public final EOS.EpicAccountId localUserId;
+        public final String offerId;
+
+        public CopyOfferByIdOptions(EOS.EpicAccountId localUserId, String offerId) {
+            this.localUserId = localUserId;
+            this.offerId = offerId;
         }
     }
 
