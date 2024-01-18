@@ -149,6 +149,7 @@ isn't quite there yet. At the time of writing, the following are implemented.
 ### Ecom interface
 
 - Catalog offers (query/count/copy)
+- Entitlements (query/count/copy)
 
 If there's something missing that you need, please do open an issue. PRs
 are very welcome.

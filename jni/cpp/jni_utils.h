@@ -45,6 +45,9 @@ jlong javaLongFromObjectField(JNIEnv* env, jobject obj, const char* field);
 
 jint javaEnumValueFromObject(JNIEnv* env, jobject obj);
 
+jboolean
+javaBooleanFromObjectField(JNIEnv* env, jobject obj, const char* field);
+
 void throwEOSException(JNIEnv* env, int result_code);
 
 } // namespace EOS4J

@@ -95,6 +95,13 @@ jint EOS4J::javaEnumValueFromObject(JNIEnv* env, jobject obj) {
 	return env->CallIntMethod(obj, ord);
 }
 
+jboolean
+EOS4J::javaBooleanFromObjectField(JNIEnv* env, jobject obj, const char* field) {
+	jclass cls = env->GetObjectClass(obj);
+	jfieldID fid = env->GetFieldID(cls, field, "Z");
+	return env->GetBooleanField(obj, fid);
+}
+
 void EOS4J::throwEOSException(JNIEnv* env, int result_code) {
 	jclass cls = env->FindClass("com/bearwaves/eos4j/EOSException");
 	jmethodID ctor = env->GetMethodID(cls, "<init>", "(I)V");
