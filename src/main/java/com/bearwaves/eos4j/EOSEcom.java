@@ -58,6 +58,10 @@ public class EOSEcom {
         EOSEcomNative.queryOwnership(handle, options, callback);
     }
 
+    public void queryOwnershipToken(QueryOwnershipTokenOptions options, OnQueryOwnershipTokenCallback callback) {
+        EOSEcomNative.queryOwnershipToken(handle, options, callback);
+    }
+
     public static class CatalogOffer extends EOSHandle {
         public final int serverIndex;
         public final String catalogNamespace;
@@ -283,6 +287,18 @@ public class EOSEcom {
         }
     }
 
+    public static class QueryOwnershipTokenOptions {
+        public final EOS.EpicAccountId localUserId;
+        public final String[] catalogItemIds;
+        public final String catalogNamespace;
+
+        public QueryOwnershipTokenOptions(EOS.EpicAccountId localUserId, String[] catalogItemIds, String catalogNamespace) {
+            this.localUserId = localUserId;
+            this.catalogItemIds = catalogItemIds;
+            this.catalogNamespace = catalogNamespace;
+        }
+    }
+
     // Callback structs
 
     public static class QueryOffersCallbackInfo {
@@ -329,6 +345,18 @@ public class EOSEcom {
         }
     }
 
+    public static class QueryOwnershipTokenCallbackInfo {
+        public final int resultCode;
+        public final EOS.EpicAccountId localUserId;
+        public final String ownershipToken;
+
+        QueryOwnershipTokenCallbackInfo(int resultCode, EOS.EpicAccountId localUserId, String ownershipToken) {
+            this.resultCode = resultCode;
+            this.localUserId = localUserId;
+            this.ownershipToken = ownershipToken;
+        }
+    }
+
     // Callback interfaces
 
     public interface OnQueryOffersCompleteCallback {
@@ -345,6 +373,10 @@ public class EOSEcom {
 
     public interface OnQueryOwnershipCallback {
         void run(QueryOwnershipCallbackInfo data);
+    }
+
+    public interface OnQueryOwnershipTokenCallback {
+        void run(QueryOwnershipTokenCallbackInfo data);
     }
 
     // Enums

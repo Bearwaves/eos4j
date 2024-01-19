@@ -450,5 +450,49 @@ class EOSEcomNative {
             });
         });
     */
+
+    static native void queryOwnershipToken(
+            long handle,
+            EOSEcom.QueryOwnershipTokenOptions options,
+            EOSEcom.OnQueryOwnershipTokenCallback callback
+    ); /*
+        jobject local_user_id_obj = EOS4J::javaObjectFromObjectField(env, options, "localUserId", "Lcom/bearwaves/eos4j/EOS$EpicAccountId;");
+        auto local_user_id = EOS4J::javaLongFromObjectField(env, local_user_id_obj, "ptr");
+        auto catalog_namespace = EOS4J::javaStringFromObjectField(env, options, "catalogNamespace");
+
+        std::vector<EOS4J::JavaString> catalog_item_ids = EOS4J::javaStringVectorFromObjectField(env, options, "catalogItemIds");
+        const char* item_ids[catalog_item_ids.size()];
+        for (size_t i = 0; i < catalog_item_ids.size(); i++) {
+            item_ids[i] = catalog_item_ids.at(i).c_str();
+        }
+
+        EOS_Ecom_QueryOwnershipTokenOptions query_options;
+        memset(&query_options, 0, sizeof(query_options));
+        query_options.ApiVersion = EOS_ECOM_QUERYOWNERSHIPTOKEN_API_LATEST;
+        query_options.LocalUserId = reinterpret_cast<EOS_EpicAccountId>(local_user_id);
+        query_options.CatalogItemIds = reinterpret_cast<EOS_Ecom_CatalogItemId*>(item_ids);
+        query_options.CatalogItemIdCount = catalog_item_ids.size();
+        if (catalog_namespace) {
+            query_options.CatalogNamespace = catalog_namespace->c_str();
+        }
+
+        auto callback_adapter = std::make_unique<EOS4J::CallbackAdapter>(env, callback);
+        EOS_Ecom_QueryOwnershipToken(reinterpret_cast<EOS_HEcom>(handle), &query_options, callback_adapter.release(), [](const EOS_Ecom_QueryOwnershipTokenCallbackInfo* data) -> void {
+            std::unique_ptr<EOS4J::CallbackAdapter> callback_adapter{reinterpret_cast<EOS4J::CallbackAdapter*>(data->ClientData)};
+            callback_adapter->attach([&](JNIEnv* env, jobject callback) -> void {
+                jclass eaid_cls = env->FindClass("com/bearwaves/eos4j/EOS$EpicAccountId");
+                jmethodID eaid_ctor = env->GetMethodID(eaid_cls, "<init>", "(J)V");
+                auto local_user_id = env->NewObject(eaid_cls, eaid_ctor, data->LocalUserId);
+
+                jclass callback_info_class = env->FindClass("com/bearwaves/eos4j/EOSEcom$QueryOwnershipTokenCallbackInfo");
+                jmethodID callback_info_ctor = env->GetMethodID(callback_info_class, "<init>", "(ILcom/bearwaves/eos4j/EOS$EpicAccountId;Ljava/lang/String;)V");
+                auto callback_info = env->NewObject(callback_info_class, callback_info_ctor, static_cast<int>(data->ResultCode), local_user_id, env->NewStringUTF(data->OwnershipToken));
+
+                jclass cls = env->GetObjectClass(callback);
+                jmethodID mid = env->GetMethodID(cls, "run", "(Lcom/bearwaves/eos4j/EOSEcom$QueryOwnershipTokenCallbackInfo;)V");
+                env->CallVoidMethod(callback, mid, callback_info);
+            });
+        });
+    */
 }
 
