@@ -353,5 +353,45 @@ class EOSEcomNative {
     static native void releaseEntitlement(long handle); /*
         EOS_Ecom_Entitlement_Release(reinterpret_cast<EOS_Ecom_Entitlement*>(handle));
     */
+
+    static native void queryEntitlementToken(
+            long handle,
+            EOSEcom.QueryEntitlementTokenOptions options,
+            EOSEcom.OnQueryEntitlementTokenCallback callback
+    ); /*
+        jobject local_user_id_obj = EOS4J::javaObjectFromObjectField(env, options, "localUserId", "Lcom/bearwaves/eos4j/EOS$EpicAccountId;");
+        auto local_user_id = EOS4J::javaLongFromObjectField(env, local_user_id_obj, "ptr");
+
+        std::vector<EOS4J::JavaString> entitlement_names = EOS4J::javaStringVectorFromObjectField(env, options, "entitlementNames");
+        const char* entitlements[entitlement_names.size()];
+        for (size_t i = 0; i < entitlement_names.size(); i++) {
+            entitlements[i] = entitlement_names.at(i).c_str();
+        }
+
+        EOS_Ecom_QueryEntitlementTokenOptions query_options;
+        memset(&query_options, 0, sizeof(query_options));
+        query_options.ApiVersion = EOS_ECOM_QUERYENTITLEMENTTOKEN_API_LATEST;
+        query_options.LocalUserId = reinterpret_cast<EOS_EpicAccountId>(local_user_id);
+        query_options.EntitlementNames = reinterpret_cast<EOS_Ecom_EntitlementName*>(entitlements);
+        query_options.EntitlementNameCount = entitlement_names.size();
+
+        auto callback_adapter = std::make_unique<EOS4J::CallbackAdapter>(env, callback);
+        EOS_Ecom_QueryEntitlementToken(reinterpret_cast<EOS_HEcom>(handle), &query_options, callback_adapter.release(), [](const EOS_Ecom_QueryEntitlementTokenCallbackInfo* data) -> void {
+            std::unique_ptr<EOS4J::CallbackAdapter> callback_adapter{reinterpret_cast<EOS4J::CallbackAdapter*>(data->ClientData)};
+            callback_adapter->attach([&](JNIEnv* env, jobject callback) -> void {
+                jclass eaid_cls = env->FindClass("com/bearwaves/eos4j/EOS$EpicAccountId");
+                jmethodID eaid_ctor = env->GetMethodID(eaid_cls, "<init>", "(J)V");
+                auto local_user_id = env->NewObject(eaid_cls, eaid_ctor, data->LocalUserId);
+
+                jclass callback_info_class = env->FindClass("com/bearwaves/eos4j/EOSEcom$QueryEntitlementTokenCallbackInfo");
+                jmethodID callback_info_ctor = env->GetMethodID(callback_info_class, "<init>", "(ILcom/bearwaves/eos4j/EOS$EpicAccountId;Ljava/lang/String;)V");
+                auto callback_info = env->NewObject(callback_info_class, callback_info_ctor, static_cast<int>(data->ResultCode), local_user_id, env->NewStringUTF(data->EntitlementToken));
+
+                jclass cls = env->GetObjectClass(callback);
+                jmethodID mid = env->GetMethodID(cls, "run", "(Lcom/bearwaves/eos4j/EOSEcom$QueryEntitlementTokenCallbackInfo;)V");
+                env->CallVoidMethod(callback, mid, callback_info);
+            });
+        });
+     */
 }
 

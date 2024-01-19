@@ -50,6 +50,10 @@ public class EOSEcom {
         return EOSEcomNative.copyEntitlementByNameAndIndex(handle, options);
     }
 
+    public void queryEntitlementToken(QueryEntitlementTokenOptions options, OnQueryEntitlementTokenCallback callback) {
+        EOSEcomNative.queryEntitlementToken(handle, options, callback);
+    }
+
     public static class CatalogOffer extends EOSHandle {
         public final int serverIndex;
         public final String catalogNamespace;
@@ -140,6 +144,8 @@ public class EOSEcom {
             EOSEcomNative.releaseEntitlement(ptr);
         }
     }
+
+    // Options structs
 
     public static class QueryOffersOptions {
         public final EOS.EpicAccountId localUserId;
@@ -241,11 +247,23 @@ public class EOSEcom {
         }
     }
 
+    public static class QueryEntitlementTokenOptions {
+        public final EOS.EpicAccountId localUserId;
+        public final String[] entitlementNames;
+
+        public QueryEntitlementTokenOptions(EOS.EpicAccountId localUserId, String[] entitlementNames) {
+            this.localUserId = localUserId;
+            this.entitlementNames = entitlementNames;
+        }
+    }
+
+    // Callback structs
+
     public static class QueryOffersCallbackInfo {
         public final int resultCode;
         public final EOS.EpicAccountId localUserId;
 
-        public QueryOffersCallbackInfo(int resultCode, EOS.EpicAccountId localUserId) {
+        QueryOffersCallbackInfo(int resultCode, EOS.EpicAccountId localUserId) {
             this.resultCode = resultCode;
             this.localUserId = localUserId;
         }
@@ -255,11 +273,25 @@ public class EOSEcom {
         public final int resultCode;
         public final EOS.EpicAccountId localUserId;
 
-        public QueryEntitlementsCallbackInfo(int resultCode, EOS.EpicAccountId localUserId) {
+        QueryEntitlementsCallbackInfo(int resultCode, EOS.EpicAccountId localUserId) {
             this.resultCode = resultCode;
             this.localUserId = localUserId;
         }
     }
+
+    public static class QueryEntitlementTokenCallbackInfo {
+        public final int resultCode;
+        public final EOS.EpicAccountId localUserId;
+        public final String entitlementToken;
+
+        QueryEntitlementTokenCallbackInfo(int resultCode, EOS.EpicAccountId localUserId, String entitlementToken) {
+            this.resultCode = resultCode;
+            this.localUserId = localUserId;
+            this.entitlementToken = entitlementToken;
+        }
+    }
+
+    // Callback interfaces
 
     public interface OnQueryOffersCompleteCallback {
         void run(QueryOffersCallbackInfo data);
@@ -267,5 +299,9 @@ public class EOSEcom {
 
     public interface OnQueryEntitlementsCallback {
         void run(QueryEntitlementsCallbackInfo data);
+    }
+
+    public interface OnQueryEntitlementTokenCallback {
+        void run(QueryEntitlementTokenCallbackInfo data);
     }
 }
