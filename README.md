@@ -150,6 +150,7 @@ isn't quite there yet. At the time of writing, the following are implemented.
 
 - Catalog offers (query/count/copy)
 - Entitlements (query/count/copy), entitlement token
+- Query ownership
 
 If there's something missing that you need, please do open an issue. PRs
 are very welcome.
