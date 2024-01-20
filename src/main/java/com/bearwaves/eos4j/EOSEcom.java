@@ -54,6 +54,10 @@ public class EOSEcom {
         EOSEcomNative.queryEntitlementToken(handle, options, callback);
     }
 
+    public void redeemEntitlements(RedeemEntitlementsOptions options, OnRedeemEntitlementsCallback callback) {
+        EOSEcomNative.redeemEntitlements(handle, options, callback);
+    }
+
     public void queryOwnership(QueryOwnershipOptions options, OnQueryOwnershipCallback callback) {
         EOSEcomNative.queryOwnership(handle, options, callback);
     }
@@ -275,6 +279,16 @@ public class EOSEcom {
         }
     }
 
+    public static class RedeemEntitlementsOptions {
+        public final EOS.EpicAccountId localUserId;
+        public final String[] entitlementIds;
+
+        public RedeemEntitlementsOptions(EOS.EpicAccountId localUserId, String[] entitlementIds) {
+            this.localUserId = localUserId;
+            this.entitlementIds = entitlementIds;
+        }
+    }
+
     public static class QueryOwnershipOptions {
         public final EOS.EpicAccountId localUserId;
         public final String[] catalogItemIds;
@@ -333,6 +347,18 @@ public class EOSEcom {
         }
     }
 
+    public static class RedeemEntitlementsCallbackInfo {
+        public final int resultCode;
+        public final EOS.EpicAccountId localUserId;
+        public final int redeemedEntitlementIdsCount;
+
+        RedeemEntitlementsCallbackInfo(int resultCode, EOS.EpicAccountId localUserId, int redeemedEntitlementIdsCount) {
+            this.resultCode = resultCode;
+            this.localUserId = localUserId;
+            this.redeemedEntitlementIdsCount = redeemedEntitlementIdsCount;
+        }
+    }
+
     public static class QueryOwnershipCallbackInfo {
         public final int resultCode;
         public final EOS.EpicAccountId localUserId;
@@ -369,6 +395,10 @@ public class EOSEcom {
 
     public interface OnQueryEntitlementTokenCallback {
         void run(QueryEntitlementTokenCallbackInfo data);
+    }
+
+    public interface OnRedeemEntitlementsCallback {
+        void run(RedeemEntitlementsCallbackInfo data);
     }
 
     public interface OnQueryOwnershipCallback {

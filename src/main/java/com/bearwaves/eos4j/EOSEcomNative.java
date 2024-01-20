@@ -394,6 +394,46 @@ class EOSEcomNative {
         });
      */
 
+    static native void redeemEntitlements(
+            long handle,
+            EOSEcom.RedeemEntitlementsOptions options,
+            EOSEcom.OnRedeemEntitlementsCallback callback
+    ); /*
+        jobject local_user_id_obj = EOS4J::javaObjectFromObjectField(env, options, "localUserId", "Lcom/bearwaves/eos4j/EOS$EpicAccountId;");
+        auto local_user_id = EOS4J::javaLongFromObjectField(env, local_user_id_obj, "ptr");
+
+        std::vector<EOS4J::JavaString> entitlement_ids = EOS4J::javaStringVectorFromObjectField(env, options, "entitlementIds");
+        const char* entitlements[entitlement_ids.size()];
+        for (size_t i = 0; i < entitlement_ids.size(); i++) {
+            entitlements[i] = entitlement_ids.at(i).c_str();
+        }
+
+        EOS_Ecom_RedeemEntitlementsOptions redeem_options;
+        memset(&redeem_options, 0, sizeof(redeem_options));
+        redeem_options.ApiVersion = EOS_ECOM_REDEEMENTITLEMENTS_API_LATEST;
+        redeem_options.LocalUserId = reinterpret_cast<EOS_EpicAccountId>(local_user_id);
+        redeem_options.EntitlementIds = reinterpret_cast<EOS_Ecom_EntitlementId*>(entitlements);
+        redeem_options.EntitlementIdCount = entitlement_ids.size();
+
+        auto callback_adapter = std::make_unique<EOS4J::CallbackAdapter>(env, callback);
+        EOS_Ecom_RedeemEntitlements(reinterpret_cast<EOS_HEcom>(handle), &redeem_options, callback_adapter.release(), [](const EOS_Ecom_RedeemEntitlementsCallbackInfo* data) -> void {
+            std::unique_ptr<EOS4J::CallbackAdapter> callback_adapter{reinterpret_cast<EOS4J::CallbackAdapter*>(data->ClientData)};
+            callback_adapter->attach([&](JNIEnv* env, jobject callback) -> void {
+                jclass eaid_cls = env->FindClass("com/bearwaves/eos4j/EOS$EpicAccountId");
+                jmethodID eaid_ctor = env->GetMethodID(eaid_cls, "<init>", "(J)V");
+                auto local_user_id = env->NewObject(eaid_cls, eaid_ctor, data->LocalUserId);
+
+                jclass callback_info_class = env->FindClass("com/bearwaves/eos4j/EOSEcom$RedeemEntitlementsCallbackInfo");
+                jmethodID callback_info_ctor = env->GetMethodID(callback_info_class, "<init>", "(ILcom/bearwaves/eos4j/EOS$EpicAccountId;I)V");
+                auto callback_info = env->NewObject(callback_info_class, callback_info_ctor, static_cast<int>(data->ResultCode), local_user_id, data->RedeemedEntitlementIdsCount);
+
+                jclass cls = env->GetObjectClass(callback);
+                jmethodID mid = env->GetMethodID(cls, "run", "(Lcom/bearwaves/eos4j/EOSEcom$RedeemEntitlementsCallbackInfo;)V");
+                env->CallVoidMethod(callback, mid, callback_info);
+            });
+        });
+     */
+
     static native void queryOwnership(
             long handle,
             EOSEcom.QueryOwnershipOptions options,
