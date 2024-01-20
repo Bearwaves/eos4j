@@ -66,6 +66,10 @@ public class EOSEcom {
         EOSEcomNative.queryOwnershipToken(handle, options, callback);
     }
 
+    public void checkout(CheckoutOptions options, OnCheckoutCallback callback) {
+        EOSEcomNative.checkout(handle, options, callback);
+    }
+
     public static class CatalogOffer extends EOSHandle {
         public final int serverIndex;
         public final String catalogNamespace;
@@ -164,6 +168,14 @@ public class EOSEcom {
         public ItemOwnership(String id, OwnershipStatus ownershipStatus) {
             this.id = id;
             this.ownershipStatus = ownershipStatus;
+        }
+    }
+
+    public static class CheckoutEntry {
+        public final String catalogOfferId;
+
+        public CheckoutEntry(String catalogOfferId) {
+            this.catalogOfferId = catalogOfferId;
         }
     }
 
@@ -313,6 +325,18 @@ public class EOSEcom {
         }
     }
 
+    public static class CheckoutOptions {
+        public final EOS.EpicAccountId localUserId;
+        public final String overrideCatalogNamespace;
+        public final CheckoutEntry[] entries;
+
+        public CheckoutOptions(EOS.EpicAccountId localUserId, String overrideCatalogNamespace, CheckoutEntry[] entries) {
+            this.localUserId = localUserId;
+            this.overrideCatalogNamespace = overrideCatalogNamespace;
+            this.entries = entries;
+        }
+    }
+
     // Callback structs
 
     public static class QueryOffersCallbackInfo {
@@ -383,6 +407,18 @@ public class EOSEcom {
         }
     }
 
+    public static class CheckoutCallbackInfo {
+        public final int resultCode;
+        public final EOS.EpicAccountId localUserId;
+        public final String transactionId;
+
+        CheckoutCallbackInfo(int resultCode, EOS.EpicAccountId localUserId, String transactionId) {
+            this.resultCode = resultCode;
+            this.localUserId = localUserId;
+            this.transactionId = transactionId;
+        }
+    }
+
     // Callback interfaces
 
     public interface OnQueryOffersCompleteCallback {
@@ -407,6 +443,10 @@ public class EOSEcom {
 
     public interface OnQueryOwnershipTokenCallback {
         void run(QueryOwnershipTokenCallbackInfo data);
+    }
+
+    public interface OnCheckoutCallback {
+        void run(CheckoutCallbackInfo data);
     }
 
     // Enums

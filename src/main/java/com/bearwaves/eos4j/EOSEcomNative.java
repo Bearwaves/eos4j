@@ -534,5 +534,53 @@ class EOSEcomNative {
             });
         });
     */
+
+    static native void checkout(
+            long handle,
+            EOSEcom.CheckoutOptions options,
+            EOSEcom.OnCheckoutCallback callback
+    ); /*
+        jobject local_user_id_obj = EOS4J::javaObjectFromObjectField(env, options, "localUserId", "Lcom/bearwaves/eos4j/EOS$EpicAccountId;");
+        auto local_user_id = EOS4J::javaLongFromObjectField(env, local_user_id_obj, "ptr");
+        auto catalog_namespace = EOS4J::javaStringFromObjectField(env, options, "overrideCatalogNamespace");
+
+        jobjectArray catalog_entries = static_cast<jobjectArray>(EOS4J::javaObjectFromObjectField(env, options, "entries", "[Lcom/bearwaves/eos4j/EOSEcom$CheckoutEntry;"));
+        size_t size = env->GetArrayLength(catalog_entries);
+        EOS_Ecom_CheckoutEntry entries[size];
+        for (size_t i = 0; i < size; i++) {
+            entries[i].ApiVersion = EOS_ECOM_CHECKOUTENTRY_API_LATEST;
+            jobject entry = env->GetObjectArrayElement(catalog_entries, i);
+            auto offer_id = EOS4J::javaStringFromObjectField(env, entry, "catalogOfferId");
+            entries[i].OfferId = offer_id->c_str();
+        }
+
+        EOS_Ecom_CheckoutOptions checkout_options;
+        memset(&checkout_options, 0, sizeof(checkout_options));
+        checkout_options.ApiVersion = EOS_ECOM_CHECKOUT_API_LATEST;
+        checkout_options.LocalUserId = reinterpret_cast<EOS_EpicAccountId>(local_user_id);
+        if (catalog_namespace) {
+            checkout_options.OverrideCatalogNamespace = catalog_namespace->c_str();
+        }
+        checkout_options.Entries = entries;
+        checkout_options.EntryCount = size;
+
+        auto callback_adapter = std::make_unique<EOS4J::CallbackAdapter>(env, callback);
+        EOS_Ecom_Checkout(reinterpret_cast<EOS_HEcom>(handle), &checkout_options, callback_adapter.release(), [](const EOS_Ecom_CheckoutCallbackInfo* data) -> void {
+            std::unique_ptr<EOS4J::CallbackAdapter> callback_adapter{reinterpret_cast<EOS4J::CallbackAdapter*>(data->ClientData)};
+            callback_adapter->attach([&](JNIEnv* env, jobject callback) -> void {
+                jclass eaid_cls = env->FindClass("com/bearwaves/eos4j/EOS$EpicAccountId");
+                jmethodID eaid_ctor = env->GetMethodID(eaid_cls, "<init>", "(J)V");
+                auto local_user_id = env->NewObject(eaid_cls, eaid_ctor, data->LocalUserId);
+
+                jclass callback_info_class = env->FindClass("com/bearwaves/eos4j/EOSEcom$CheckoutCallbackInfo");
+                jmethodID callback_info_ctor = env->GetMethodID(callback_info_class, "<init>", "(ILcom/bearwaves/eos4j/EOS$EpicAccountId;Ljava/lang/String;)V");
+                auto callback_info = env->NewObject(callback_info_class, callback_info_ctor, static_cast<int>(data->ResultCode), local_user_id, env->NewStringUTF(data->TransactionId));
+
+                jclass cls = env->GetObjectClass(callback);
+                jmethodID mid = env->GetMethodID(cls, "run", "(Lcom/bearwaves/eos4j/EOSEcom$CheckoutCallbackInfo;)V");
+                env->CallVoidMethod(callback, mid, callback_info);
+            });
+        });
+    */
 }
 
