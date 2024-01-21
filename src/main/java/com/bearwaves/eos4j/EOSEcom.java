@@ -199,6 +199,26 @@ public class EOSEcom {
         public void release() {
             EOSEcomNative.releaseTransaction(ptr);
         }
+
+        public String getTransactionId() {
+            return EOSEcomNative.transactionGetTransactionId(ptr);
+        }
+
+        public int getEntitlementsCount() {
+            return EOSEcomNative.transactionGetEntitlementsCount(ptr);
+        }
+
+        public Entitlement copyEntitlementByIndex(CopyEntitlementByIndexOptions options) throws EOSException {
+            return EOSEcomNative.transactionCopyEntitlementByIndex(ptr, options);
+        }
+
+        public static class CopyEntitlementByIndexOptions {
+            public final int entitlementIndex;
+
+            public CopyEntitlementByIndexOptions(int entitlementIndex) {
+                this.entitlementIndex = entitlementIndex;
+            }
+        }
     }
 
     // Options structs

@@ -650,5 +650,61 @@ class EOSEcomNative {
     static native void releaseTransaction(long handle); /*
         EOS_Ecom_Transaction_Release(reinterpret_cast<EOS_Ecom_HTransaction>(handle));
     */
+
+    static native String transactionGetTransactionId(long transactionHandle); /*
+        int32_t length = 100;
+        char buffer[length];
+        EOS_Ecom_Transaction_GetTransactionId(
+            reinterpret_cast<EOS_Ecom_HTransaction>(transactionHandle),
+            buffer,
+            &length
+        );
+        return env->NewStringUTF(buffer);
+    */
+
+    static native int transactionGetEntitlementsCount(long transactionHandle); /*
+        EOS_Ecom_Transaction_GetEntitlementsCountOptions count_options;
+        memset(&count_options, 0, sizeof(count_options));
+        count_options.ApiVersion = EOS_ECOM_TRANSACTION_GETENTITLEMENTSCOUNT_API_LATEST;
+
+        return EOS_Ecom_Transaction_GetEntitlementsCount(reinterpret_cast<EOS_Ecom_HTransaction>(transactionHandle), &count_options);
+    */
+
+    static native EOSEcom.Entitlement transactionCopyEntitlementByIndex(
+            long transactionHandle, EOSEcom.Transaction.CopyEntitlementByIndexOptions options
+    ) throws EOSException; /*
+        auto index = EOS4J::javaIntFromObjectField(env, options, "entitlementIndex");
+
+        EOS_Ecom_Transaction_CopyEntitlementByIndexOptions copy_options;
+        memset(&copy_options, 0, sizeof(copy_options));
+        copy_options.ApiVersion = EOS_ECOM_TRANSACTION_COPYENTITLEMENTBYINDEX_API_LATEST;
+        copy_options.EntitlementIndex = static_cast<int>(index);
+
+        EOS_Ecom_Entitlement* out;
+        auto copy_result = EOS_Ecom_Transaction_CopyEntitlementByIndex(reinterpret_cast<EOS_Ecom_HTransaction>(transactionHandle), &copy_options, &out);
+        if (copy_result != EOS_EResult::EOS_Success) {
+            EOS4J::throwEOSException(env, static_cast<int>(copy_result));
+            return nullptr;
+        }
+
+        jclass result_cls = env->FindClass("com/bearwaves/eos4j/EOSEcom$Entitlement");
+        jmethodID result_ctor = env->GetMethodID(result_cls, "<init>", "(JLjava/lang/String;Ljava/lang/String;Ljava/lang/String;IZLjava/util/Date;)V");
+
+        jclass date_cls = env->FindClass("java/util/Date");
+        jmethodID date_ctor = env->GetMethodID(date_cls, "<init>", "(J)V");
+        jobject end = out->EndTimestamp == EOS_ECOM_ENTITLEMENT_ENDTIMESTAMP_UNDEFINED ? nullptr : env->NewObject(date_cls, date_ctor, out->EndTimestamp);
+
+        return env->NewObject(
+            result_cls,
+            result_ctor,
+            (long long) out,
+            env->NewStringUTF(out->EntitlementName),
+            env->NewStringUTF(out->EntitlementId),
+            env->NewStringUTF(out->CatalogItemId),
+            out->ServerIndex,
+            out->bRedeemed,
+            end
+        );
+     */
 }
 

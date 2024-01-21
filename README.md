@@ -155,7 +155,9 @@ function.
 - Entitlements (query/count/copy), entitlement token, redeem
 - Query ownership, ownership token
 - Checkout
-- Transaction count and copy by ID/index
+- Transactions
+  - Count and copy by ID/index
+  - Get transaction ID, count and copy entitlements
 
 If there's something missing that you need, please do open an issue. PRs
 are very welcome.
