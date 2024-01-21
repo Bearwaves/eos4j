@@ -594,5 +594,61 @@ class EOSEcomNative {
 
         return EOS_Ecom_GetTransactionCount(reinterpret_cast<EOS_HEcom>(handle), &count_options);
     */
+
+    static native EOSEcom.Transaction copyTransactionById(
+            long handle, EOSEcom.CopyTransactionByIdOptions options
+    ) throws EOSException; /*
+        jobject local_user_id_obj = EOS4J::javaObjectFromObjectField(env, options, "localUserId", "Lcom/bearwaves/eos4j/EOS$EpicAccountId;");
+        auto local_user_id = EOS4J::javaLongFromObjectField(env, local_user_id_obj, "ptr");
+        auto id = EOS4J::javaStringFromObjectField(env, options, "transactionId");
+
+        EOS_Ecom_CopyTransactionByIdOptions copy_options;
+        memset(&copy_options, 0, sizeof(copy_options));
+        copy_options.ApiVersion = EOS_ECOM_COPYTRANSACTIONBYID_API_LATEST;
+        copy_options.LocalUserId = reinterpret_cast<EOS_EpicAccountId>(local_user_id);
+        copy_options.TransactionId = id->c_str();
+
+        EOS_Ecom_HTransaction out;
+        auto copy_result = EOS_Ecom_CopyTransactionById(reinterpret_cast<EOS_HEcom>(handle), &copy_options, &out);
+        if (copy_result != EOS_EResult::EOS_Success) {
+            EOS4J::throwEOSException(env, static_cast<int>(copy_result));
+            return nullptr;
+        }
+
+        jclass result_cls = env->FindClass("com/bearwaves/eos4j/EOSEcom$Transaction");
+        jmethodID result_ctor = env->GetMethodID(result_cls, "<init>", "(J)V");
+
+        return env->NewObject(result_cls, result_ctor, (long long) out);
+    */
+
+    static native EOSEcom.Transaction copyTransactionByIndex(
+            long handle, EOSEcom.CopyTransactionByIndexOptions options
+    ) throws EOSException; /*
+        jobject local_user_id_obj = EOS4J::javaObjectFromObjectField(env, options, "localUserId", "Lcom/bearwaves/eos4j/EOS$EpicAccountId;");
+        auto local_user_id = EOS4J::javaLongFromObjectField(env, local_user_id_obj, "ptr");
+        auto index = EOS4J::javaIntFromObjectField(env, options, "transactionIndex");
+
+        EOS_Ecom_CopyTransactionByIndexOptions copy_options;
+        memset(&copy_options, 0, sizeof(copy_options));
+        copy_options.ApiVersion = EOS_ECOM_COPYTRANSACTIONBYINDEX_API_LATEST;
+        copy_options.LocalUserId = reinterpret_cast<EOS_EpicAccountId>(local_user_id);
+        copy_options.TransactionIndex = index;
+
+        EOS_Ecom_HTransaction out;
+        auto copy_result = EOS_Ecom_CopyTransactionByIndex(reinterpret_cast<EOS_HEcom>(handle), &copy_options, &out);
+        if (copy_result != EOS_EResult::EOS_Success) {
+            EOS4J::throwEOSException(env, static_cast<int>(copy_result));
+            return nullptr;
+        }
+
+        jclass result_cls = env->FindClass("com/bearwaves/eos4j/EOSEcom$Transaction");
+        jmethodID result_ctor = env->GetMethodID(result_cls, "<init>", "(J)V");
+
+        return env->NewObject(result_cls, result_ctor, (long long) out);
+    */
+
+    static native void releaseTransaction(long handle); /*
+        EOS_Ecom_Transaction_Release(reinterpret_cast<EOS_Ecom_HTransaction>(handle));
+    */
 }
 

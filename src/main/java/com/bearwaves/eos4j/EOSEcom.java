@@ -74,6 +74,14 @@ public class EOSEcom {
         return EOSEcomNative.getTransactionCount(handle, options);
     }
 
+    public Transaction copyTransactionById(CopyTransactionByIdOptions options) throws EOSException {
+        return EOSEcomNative.copyTransactionById(handle, options);
+    }
+
+    public Transaction copyTransactionByIndex(CopyTransactionByIndexOptions options) throws EOSException {
+        return EOSEcomNative.copyTransactionByIndex(handle, options);
+    }
+
     public static class CatalogOffer extends EOSHandle {
         public final int serverIndex;
         public final String catalogNamespace;
@@ -180,6 +188,16 @@ public class EOSEcom {
 
         public CheckoutEntry(String catalogOfferId) {
             this.catalogOfferId = catalogOfferId;
+        }
+    }
+
+    public static class Transaction extends EOSHandle {
+        Transaction(long ptr) {
+            super(ptr);
+        }
+
+        public void release() {
+            EOSEcomNative.releaseTransaction(ptr);
         }
     }
 
@@ -346,6 +364,26 @@ public class EOSEcom {
 
         public GetTransactionCountOptions(EOS.EpicAccountId localUserId) {
             this.localUserId = localUserId;
+        }
+    }
+
+    public static class CopyTransactionByIdOptions {
+        public final EOS.EpicAccountId localUserId;
+        public final String transactionId;
+
+        public CopyTransactionByIdOptions(EOS.EpicAccountId localUserId, String transactionId) {
+            this.localUserId = localUserId;
+            this.transactionId = transactionId;
+        }
+    }
+
+    public static class CopyTransactionByIndexOptions {
+        public final EOS.EpicAccountId localUserId;
+        public final int transactionIndex;
+
+        public CopyTransactionByIndexOptions(EOS.EpicAccountId localUserId, int transactionIndex) {
+            this.localUserId = localUserId;
+            this.transactionIndex = transactionIndex;
         }
     }
 

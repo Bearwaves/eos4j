@@ -103,6 +103,9 @@ benefit from additional documentation, please do open an issue.
 The goal is for eos4j to implement the entirety of the EOS SDK, but it
 isn't quite there yet. At the time of writing, the following are implemented.
 
+Releasing is implemented as methods on returned classes, rather than as a
+function.
+
 ### Platform interface
 
 - Create and release
@@ -152,7 +155,7 @@ isn't quite there yet. At the time of writing, the following are implemented.
 - Entitlements (query/count/copy), entitlement token, redeem
 - Query ownership, ownership token
 - Checkout
-- Transaction count
+- Transaction count and copy by ID/index
 
 If there's something missing that you need, please do open an issue. PRs
 are very welcome.
