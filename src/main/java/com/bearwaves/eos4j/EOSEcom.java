@@ -70,6 +70,10 @@ public class EOSEcom {
         EOSEcomNative.checkout(handle, options, callback);
     }
 
+    public int getTransactionCount(GetTransactionCountOptions options) {
+        return EOSEcomNative.getTransactionCount(handle, options);
+    }
+
     public static class CatalogOffer extends EOSHandle {
         public final int serverIndex;
         public final String catalogNamespace;
@@ -334,6 +338,14 @@ public class EOSEcom {
             this.localUserId = localUserId;
             this.overrideCatalogNamespace = overrideCatalogNamespace;
             this.entries = entries;
+        }
+    }
+
+    public static class GetTransactionCountOptions {
+        public final EOS.EpicAccountId localUserId;
+
+        public GetTransactionCountOptions(EOS.EpicAccountId localUserId) {
+            this.localUserId = localUserId;
         }
     }
 

@@ -152,6 +152,7 @@ isn't quite there yet. At the time of writing, the following are implemented.
 - Entitlements (query/count/copy), entitlement token, redeem
 - Query ownership, ownership token
 - Checkout
+- Transaction count
 
 If there's something missing that you need, please do open an issue. PRs
 are very welcome.

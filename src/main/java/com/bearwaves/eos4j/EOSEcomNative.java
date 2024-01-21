@@ -582,5 +582,17 @@ class EOSEcomNative {
             });
         });
     */
+
+    static native int getTransactionCount(long handle, EOSEcom.GetTransactionCountOptions options); /*
+        jobject local_user_id_obj = EOS4J::javaObjectFromObjectField(env, options, "localUserId", "Lcom/bearwaves/eos4j/EOS$EpicAccountId;");
+        auto local_user_id = EOS4J::javaLongFromObjectField(env, local_user_id_obj, "ptr");
+
+        EOS_Ecom_GetTransactionCountOptions count_options;
+        memset(&count_options, 0, sizeof(count_options));
+        count_options.ApiVersion = EOS_ECOM_GETTRANSACTIONCOUNT_API_LATEST;
+        count_options.LocalUserId = reinterpret_cast<EOS_EpicAccountId>(local_user_id);
+
+        return EOS_Ecom_GetTransactionCount(reinterpret_cast<EOS_HEcom>(handle), &count_options);
+    */
 }
 
