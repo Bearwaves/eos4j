@@ -71,8 +71,8 @@ class EOSStatsNative {
         jclass date_class = env->FindClass("java/util/Date");
         jmethodID timestamp_mid =  env->GetMethodID(date_class, "getTime", "()J");
 
-        int64_t start_time = start_date_obj ? env->CallLongMethod(start_date_obj, timestamp_mid) : EOS_STATS_TIME_UNDEFINED;
-        int64_t end_time = end_date_obj ? env->CallLongMethod(end_date_obj, timestamp_mid) : EOS_STATS_TIME_UNDEFINED;
+        int64_t start_time = start_date_obj ? env->CallLongMethod(start_date_obj, timestamp_mid) / 1000 : EOS_STATS_TIME_UNDEFINED;
+        int64_t end_time = end_date_obj ? env->CallLongMethod(end_date_obj, timestamp_mid) / 1000 : EOS_STATS_TIME_UNDEFINED;
 
         std::vector<EOS4J::JavaString> stat_names = EOS4J::javaStringVectorFromObjectField(env, options, "statNames");
         const char* stats[stat_names.size()];
@@ -143,8 +143,8 @@ class EOSStatsNative {
 
         jclass date_cls = env->FindClass("java/util/Date");
         jmethodID date_ctor = env->GetMethodID(date_cls, "<init>", "(J)V");
-        jobject start_time = out_stat->StartTime == EOS_STATS_TIME_UNDEFINED ? nullptr : env->NewObject(date_cls, date_ctor, out_stat->StartTime);
-        jobject end_time = out_stat->EndTime == EOS_STATS_TIME_UNDEFINED ? nullptr : env->NewObject(date_cls, date_ctor, out_stat->EndTime);
+        jobject start_time = out_stat->StartTime == EOS_STATS_TIME_UNDEFINED ? nullptr : env->NewObject(date_cls, date_ctor, out_stat->StartTime * 1000);
+        jobject end_time = out_stat->EndTime == EOS_STATS_TIME_UNDEFINED ? nullptr : env->NewObject(date_cls, date_ctor, out_stat->EndTime * 1000);
 
         return env->NewObject(result_cls, result_ctor, (long long) out_stat, env->NewStringUTF(out_stat->Name), start_time, end_time, out_stat->Value);
     */
@@ -172,8 +172,8 @@ class EOSStatsNative {
 
         jclass date_cls = env->FindClass("java/util/Date");
         jmethodID date_ctor = env->GetMethodID(date_cls, "<init>", "(J)V");
-        jobject start_time = out_stat->StartTime == EOS_STATS_TIME_UNDEFINED ? nullptr : env->NewObject(date_cls, date_ctor, out_stat->StartTime);
-        jobject end_time = out_stat->EndTime == EOS_STATS_TIME_UNDEFINED ? nullptr : env->NewObject(date_cls, date_ctor, out_stat->EndTime);
+        jobject start_time = out_stat->StartTime == EOS_STATS_TIME_UNDEFINED ? nullptr : env->NewObject(date_cls, date_ctor, out_stat->StartTime * 1000);
+        jobject end_time = out_stat->EndTime == EOS_STATS_TIME_UNDEFINED ? nullptr : env->NewObject(date_cls, date_ctor, out_stat->EndTime * 1000);
 
         return env->NewObject(result_cls, result_ctor, (long long) out_stat, env->NewStringUTF(out_stat->Name), start_time, end_time, out_stat->Value);
     */

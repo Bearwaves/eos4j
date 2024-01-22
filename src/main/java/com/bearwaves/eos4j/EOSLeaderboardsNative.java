@@ -21,8 +21,8 @@ public class EOSLeaderboardsNative {
         jclass date_class = env->FindClass("java/util/Date");
         jmethodID timestamp_mid =  env->GetMethodID(date_class, "getTime", "()J");
 
-        int64_t start_time = start_date_obj ? env->CallLongMethod(start_date_obj, timestamp_mid) : EOS_LEADERBOARDS_TIME_UNDEFINED;
-        int64_t end_time = end_date_obj ? env->CallLongMethod(end_date_obj, timestamp_mid) : EOS_LEADERBOARDS_TIME_UNDEFINED;
+        int64_t start_time = start_date_obj ? env->CallLongMethod(start_date_obj, timestamp_mid) / 1000 : EOS_LEADERBOARDS_TIME_UNDEFINED;
+        int64_t end_time = end_date_obj ? env->CallLongMethod(end_date_obj, timestamp_mid) / 1000 : EOS_LEADERBOARDS_TIME_UNDEFINED;
 
         EOS_Leaderboards_QueryLeaderboardDefinitionsOptions query_options;
         memset(&query_options, 0, sizeof(query_options));
@@ -76,8 +76,8 @@ public class EOSLeaderboardsNative {
 
         jclass date_cls = env->FindClass("java/util/Date");
         jmethodID date_ctor = env->GetMethodID(date_cls, "<init>", "(J)V");
-        jobject start_time = out_definition->StartTime == EOS_LEADERBOARDS_TIME_UNDEFINED ? nullptr : env->NewObject(date_cls, date_ctor, out_definition->StartTime);
-        jobject end_time = out_definition->EndTime == EOS_LEADERBOARDS_TIME_UNDEFINED ? nullptr : env->NewObject(date_cls, date_ctor, out_definition->EndTime);
+        jobject start_time = out_definition->StartTime == EOS_LEADERBOARDS_TIME_UNDEFINED ? nullptr : env->NewObject(date_cls, date_ctor, out_definition->StartTime * 1000);
+        jobject end_time = out_definition->EndTime == EOS_LEADERBOARDS_TIME_UNDEFINED ? nullptr : env->NewObject(date_cls, date_ctor, out_definition->EndTime * 1000);
 
         auto aggregation_cls = env->FindClass("com/bearwaves/eos4j/EOSLeaderboards$Aggregation");
         jmethodID aggregation_func = env->GetStaticMethodID(aggregation_cls, "fromInt", "(I)Lcom/bearwaves/eos4j/EOSLeaderboards$Aggregation;");
@@ -109,8 +109,8 @@ public class EOSLeaderboardsNative {
 
         jclass date_cls = env->FindClass("java/util/Date");
         jmethodID date_ctor = env->GetMethodID(date_cls, "<init>", "(J)V");
-        jobject start_time = out_definition->StartTime == EOS_LEADERBOARDS_TIME_UNDEFINED ? nullptr : env->NewObject(date_cls, date_ctor, out_definition->StartTime);
-        jobject end_time = out_definition->EndTime == EOS_LEADERBOARDS_TIME_UNDEFINED ? nullptr : env->NewObject(date_cls, date_ctor, out_definition->EndTime);
+        jobject start_time = out_definition->StartTime == EOS_LEADERBOARDS_TIME_UNDEFINED ? nullptr : env->NewObject(date_cls, date_ctor, out_definition->StartTime * 1000);
+        jobject end_time = out_definition->EndTime == EOS_LEADERBOARDS_TIME_UNDEFINED ? nullptr : env->NewObject(date_cls, date_ctor, out_definition->EndTime * 1000);
 
         auto aggregation_cls = env->FindClass("com/bearwaves/eos4j/EOSLeaderboards$Aggregation");
         jmethodID aggregation_func = env->GetStaticMethodID(aggregation_cls, "fromInt", "(I)Lcom/bearwaves/eos4j/EOSLeaderboards$Aggregation;");
@@ -233,8 +233,8 @@ public class EOSLeaderboardsNative {
         jobject end_date_obj = EOS4J::javaObjectFromObjectField(env, options, "endTime", "Ljava/util/Date;");
         jclass date_class = env->FindClass("java/util/Date");
         jmethodID timestamp_mid =  env->GetMethodID(date_class, "getTime", "()J");
-        int64_t start_time = start_date_obj ? env->CallLongMethod(start_date_obj, timestamp_mid) : EOS_LEADERBOARDS_TIME_UNDEFINED;
-        int64_t end_time = end_date_obj ? env->CallLongMethod(end_date_obj, timestamp_mid) : EOS_LEADERBOARDS_TIME_UNDEFINED;
+        int64_t start_time = start_date_obj ? env->CallLongMethod(start_date_obj, timestamp_mid) / 1000 : EOS_LEADERBOARDS_TIME_UNDEFINED;
+        int64_t end_time = end_date_obj ? env->CallLongMethod(end_date_obj, timestamp_mid) / 1000 : EOS_LEADERBOARDS_TIME_UNDEFINED;
 
         // User IDs
         std::vector<EOS_ProductUserId> user_ids;

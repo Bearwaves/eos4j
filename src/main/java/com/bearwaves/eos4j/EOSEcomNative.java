@@ -77,9 +77,9 @@ class EOSEcomNative {
 
         jclass date_cls = env->FindClass("java/util/Date");
         jmethodID date_ctor = env->GetMethodID(date_cls, "<init>", "(J)V");
-        jobject expiration = out_offer->ExpirationTimestamp == EOS_ECOM_CATALOGOFFER_EXPIRATIONTIMESTAMP_UNDEFINED ? nullptr : env->NewObject(date_cls, date_ctor, out_offer->ExpirationTimestamp);
-        jobject release_date = out_offer->ReleaseDateTimestamp == EOS_ECOM_CATALOGOFFER_RELEASEDATETIMESTAMP_UNDEFINED ? nullptr : env->NewObject(date_cls, date_ctor, out_offer->ReleaseDateTimestamp);
-        jobject effective_date = out_offer->EffectiveDateTimestamp == EOS_ECOM_CATALOGOFFER_EFFECTIVEDATETIMESTAMP_UNDEFINED ? nullptr : env->NewObject(date_cls, date_ctor, out_offer->EffectiveDateTimestamp);
+        jobject expiration = out_offer->ExpirationTimestamp == EOS_ECOM_CATALOGOFFER_EXPIRATIONTIMESTAMP_UNDEFINED ? nullptr : env->NewObject(date_cls, date_ctor, out_offer->ExpirationTimestamp * 1000);
+        jobject release_date = out_offer->ReleaseDateTimestamp == EOS_ECOM_CATALOGOFFER_RELEASEDATETIMESTAMP_UNDEFINED ? nullptr : env->NewObject(date_cls, date_ctor, out_offer->ReleaseDateTimestamp * 1000);
+        jobject effective_date = out_offer->EffectiveDateTimestamp == EOS_ECOM_CATALOGOFFER_EFFECTIVEDATETIMESTAMP_UNDEFINED ? nullptr : env->NewObject(date_cls, date_ctor, out_offer->EffectiveDateTimestamp * 1000);
 
         return env->NewObject(
             result_cls,
@@ -130,9 +130,9 @@ class EOSEcomNative {
 
         jclass date_cls = env->FindClass("java/util/Date");
         jmethodID date_ctor = env->GetMethodID(date_cls, "<init>", "(J)V");
-        jobject expiration = out_offer->ExpirationTimestamp == EOS_ECOM_CATALOGOFFER_EXPIRATIONTIMESTAMP_UNDEFINED ? nullptr : env->NewObject(date_cls, date_ctor, out_offer->ExpirationTimestamp);
-        jobject release_date = out_offer->ReleaseDateTimestamp == EOS_ECOM_CATALOGOFFER_RELEASEDATETIMESTAMP_UNDEFINED ? nullptr : env->NewObject(date_cls, date_ctor, out_offer->ReleaseDateTimestamp);
-        jobject effective_date = out_offer->EffectiveDateTimestamp == EOS_ECOM_CATALOGOFFER_EFFECTIVEDATETIMESTAMP_UNDEFINED ? nullptr : env->NewObject(date_cls, date_ctor, out_offer->EffectiveDateTimestamp);
+        jobject expiration = out_offer->ExpirationTimestamp == EOS_ECOM_CATALOGOFFER_EXPIRATIONTIMESTAMP_UNDEFINED ? nullptr : env->NewObject(date_cls, date_ctor, out_offer->ExpirationTimestamp * 1000);
+        jobject release_date = out_offer->ReleaseDateTimestamp == EOS_ECOM_CATALOGOFFER_RELEASEDATETIMESTAMP_UNDEFINED ? nullptr : env->NewObject(date_cls, date_ctor, out_offer->ReleaseDateTimestamp * 1000);
+        jobject effective_date = out_offer->EffectiveDateTimestamp == EOS_ECOM_CATALOGOFFER_EFFECTIVEDATETIMESTAMP_UNDEFINED ? nullptr : env->NewObject(date_cls, date_ctor, out_offer->EffectiveDateTimestamp * 1000);
 
         return env->NewObject(
             result_cls,
@@ -253,7 +253,7 @@ class EOSEcomNative {
 
         jclass date_cls = env->FindClass("java/util/Date");
         jmethodID date_ctor = env->GetMethodID(date_cls, "<init>", "(J)V");
-        jobject end = out->EndTimestamp == EOS_ECOM_ENTITLEMENT_ENDTIMESTAMP_UNDEFINED ? nullptr : env->NewObject(date_cls, date_ctor, out->EndTimestamp);
+        jobject end = out->EndTimestamp == EOS_ECOM_ENTITLEMENT_ENDTIMESTAMP_UNDEFINED ? nullptr : env->NewObject(date_cls, date_ctor, out->EndTimestamp * 1000);
 
         return env->NewObject(
             result_cls,
@@ -293,7 +293,7 @@ class EOSEcomNative {
 
         jclass date_cls = env->FindClass("java/util/Date");
         jmethodID date_ctor = env->GetMethodID(date_cls, "<init>", "(J)V");
-        jobject end = out->EndTimestamp == EOS_ECOM_ENTITLEMENT_ENDTIMESTAMP_UNDEFINED ? nullptr : env->NewObject(date_cls, date_ctor, out->EndTimestamp);
+        jobject end = out->EndTimestamp == EOS_ECOM_ENTITLEMENT_ENDTIMESTAMP_UNDEFINED ? nullptr : env->NewObject(date_cls, date_ctor, out->EndTimestamp * 1000);
 
         return env->NewObject(
             result_cls,
@@ -335,7 +335,7 @@ class EOSEcomNative {
 
         jclass date_cls = env->FindClass("java/util/Date");
         jmethodID date_ctor = env->GetMethodID(date_cls, "<init>", "(J)V");
-        jobject end = out->EndTimestamp == EOS_ECOM_ENTITLEMENT_ENDTIMESTAMP_UNDEFINED ? nullptr : env->NewObject(date_cls, date_ctor, out->EndTimestamp);
+        jobject end = out->EndTimestamp == EOS_ECOM_ENTITLEMENT_ENDTIMESTAMP_UNDEFINED ? nullptr : env->NewObject(date_cls, date_ctor, out->EndTimestamp * 1000);
 
         return env->NewObject(
             result_cls,
@@ -692,7 +692,7 @@ class EOSEcomNative {
 
         jclass date_cls = env->FindClass("java/util/Date");
         jmethodID date_ctor = env->GetMethodID(date_cls, "<init>", "(J)V");
-        jobject end = out->EndTimestamp == EOS_ECOM_ENTITLEMENT_ENDTIMESTAMP_UNDEFINED ? nullptr : env->NewObject(date_cls, date_ctor, out->EndTimestamp);
+        jobject end = out->EndTimestamp == EOS_ECOM_ENTITLEMENT_ENDTIMESTAMP_UNDEFINED ? nullptr : env->NewObject(date_cls, date_ctor, out->EndTimestamp * 1000);
 
         return env->NewObject(
             result_cls,
