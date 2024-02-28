@@ -33,6 +33,9 @@ your own.
 Built your game using eos4j? Submit a pull request to put it here!
 
 [![Feud](https://cdn1.epicgames.com/spt-assets/68be7d7f9c75454eba71957bbbbf2e66/feud-am8w9.jpg?h=240&quality=medium&resize=1&w=180)](https://store.epicgames.com/en-US/p/feud-19b141)
+[![Age of Conquest IV](https://cdn1.epicgames.com/spt-assets/8b3036af41304872867a6b225bfe63d7/age-of-conquest-iv-ctcsd.jpg?h=240&quality=medium&resize=1&w=180)](https://store.epicgames.com/en-US/p/age-of-conquest-iv-c29987)
+[![Retro Commander](https://cdn1.epicgames.com/spt-assets/100885a7e8e3483fa4ca4222f49ae2ca/retro-commander-z228e.jpg?h=240&quality=medium&resize=1&w=180)](https://store.epicgames.com/en-US/p/retro-commander-7814fc)
+[![Demise of Nations](https://cdn1.epicgames.com/spt-assets/97ff452902b146bba9fced062becbcc3/demise-of-nations-qt8cr.jpg?h=240&quality=medium&resize=1&w=180)](https://store.epicgames.com/en-US/p/my-product-e81d20)
 
 ## Getting started
 
